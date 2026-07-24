@@ -1,7 +1,31 @@
 import type { NextConfig } from "next";
 
+const strapiUrl =
+  process.env.NEXT_PUBLIC_STRAPI_URL?.replace(/\/$/, "") ||
+  "http://localhost:1337";
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1337",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**",
+        pathname: "/uploads/**",
+      },
+    ],
+  },
+  sassOptions: {
+    silenceDeprecations: ["legacy-js-api", "import"],
+  },
+  env: {
+    NEXT_PUBLIC_STRAPI_URL: strapiUrl,
+  },
 };
 
 export default nextConfig;

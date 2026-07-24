@@ -1,0 +1,63 @@
+"use client";
+import React, { Fragment } from 'react'
+import Link from "next/link"
+
+
+
+
+//componets
+import ThemeMenuThree from "@/components/header/ThemeMenuThree"
+import PageTitle from "@/components/page-title/PageTitle"
+import BlogStyleThree from "@/components/blog/BlogStyleThree"
+import NewsletterTwo from "@/components/call-to-action/NewsletterTwo"
+import FooterThree from "@/components/footer/FooterThree"
+
+
+
+
+const BlogGrid = () => {
+
+    return (
+        <Fragment>
+            <div className="main-page-wrapper">
+                
+
+                {/* ThemeMenuThree */}
+                <ThemeMenuThree />
+                {/* ThemeMenuThree */}
+
+                {/* PageTitle */}
+                <PageTitle title="Blog Masonry" />
+                {/* PageTitle */}
+
+                {/*blog-grid-area start*/}
+                <section className="blog-masonry-area pt-150 pb-105 pt-lg-60 pb-lg-15">
+                    <div className="container">
+                        {/* BlogStyleThree start */}
+                        <BlogStyleThree />
+                        {/* BlogStyleThree end */}
+                        <div className="row">
+                            <div className="col-lg-12 d-flex align-items-center justify-content-center mt-20 mb-45">
+                                <Link className="theme_btn" href="/blog-details-v1">Load More</Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {/*blog-grid-area end*/}
+
+
+                {/*techy-newsletter start*/}
+                <NewsletterTwo />
+                {/*techy-newsletter end*/}
+
+                {/* FooterThree start */}
+                <FooterThree />
+                {/* FooterThree end */}
+
+            </div>
+
+        </Fragment>
+    )
+}
+
+export default BlogGrid
