@@ -22,11 +22,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const about = await getAboutPage();
+  const [global, about] = await Promise.all([getGlobal(), getAboutPage()]);
 
   return (
     <div className="main-page-wrapper">
-      <ThemeMenuTwo />
+      <ThemeMenuTwo global={global} />
       <PageTitle title={about?.title || "About Us"} />
 
       <section className="pt-100 pb-60">
@@ -113,7 +113,7 @@ export default async function AboutPage() {
       ) : null}
 
       <NewsletterTwo />
-      <FooterTwo />
+      <FooterTwo global={global} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import React, { Fragment } from "react";
 import Link from "next/link";
 import CopyRightTwo from "./CopyRightTwo";
 import { mediaUrl } from "@/lib/axios";
+import type { GlobalContent } from "@/types/strapi";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -14,7 +15,7 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ];
 
-const platformIcon = {
+const platformIcon: Record<string, string> = {
   facebook: "fab fa-facebook-f",
   twitter: "fab fa-twitter",
   linkedin: "fab fa-linkedin-in",
@@ -23,7 +24,11 @@ const platformIcon = {
   github: "fab fa-github",
 };
 
-const FooterTwo = ({ global }) => {
+type FooterTwoProps = {
+  global?: GlobalContent | null;
+};
+
+export default function FooterTwo({ global = null }: FooterTwoProps) {
   const contact = global?.contactInfo;
   const logo = mediaUrl(global?.logo?.url, "/assets/img/logo/header-logo-1.png");
 
@@ -34,7 +39,11 @@ const FooterTwo = ({ global }) => {
           <div className="row gx-4 gx-xxl-5">
             <div className="col-lg-4 col-md-6 mb-40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo} alt={global?.siteName || "Logo"} className="mb-20" />
+              <img
+                src={logo}
+                alt={global?.siteName || "Logo"}
+                className="mb-20"
+              />
               <p>{global?.footerText || global?.siteDescription}</p>
             </div>
             <div className="col-lg-2 col-md-6 mb-40">
@@ -74,7 +83,7 @@ const FooterTwo = ({ global }) => {
                     <a href={link.url} target="_blank" rel="noreferrer">
                       <i
                         className={
-                          platformIcon[link.platform] || "fab fa-link"
+                          platformIcon[link.platform || ""] || "fab fa-link"
                         }
                       />
                     </a>
@@ -88,6 +97,4 @@ const FooterTwo = ({ global }) => {
       </footer>
     </Fragment>
   );
-};
-
-export default FooterTwo;
+}
