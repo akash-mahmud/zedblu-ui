@@ -1,44 +1,35 @@
 "use client";
-import React, {Fragment} from 'react'
-import Link from "next/link"
 
-const TagContent = [
-    {
-      tag: 'Web Solution',
-      routerPath: '/blog-details' 
-    },
-    {
-      tag: 'Web Solution',
-      routerPath: '/blog-details' 
-    },
-    {
-      tag: 'Technology Support',
-      routerPath: '/blog-details' 
-    },
-    {
-      tag: 'UI/UX Design',
-      routerPath: '/blog-details' 
-    },
-    {
-      tag: 'Development',
-      routerPath: '/blog-details' 
-    },
-    {
-      tag: 'HTML',
-      routerPath: '/blog-details' 
-    },
-]
+import React, { Fragment } from "react";
+import Link from "next/link";
 
-const CategoryTag = () => {
-    return (
-        <Fragment>
-            <div className="tag-list">
-                {TagContent.map((val, i)=>(
-                    <Link key={i} href={val.routerPath}>{val.tag}</Link>
-                ))}
-            </div>
-        </Fragment>
-    )
-}
+const FALLBACK = [
+  "Web Solution",
+  "Technology Support",
+  "UI/UX Design",
+  "Development",
+  "HTML",
+];
 
-export default CategoryTag
+const CategoryTag = ({ tags = [] }) => {
+  const items = tags.length
+    ? tags.map((tag) => ({ name: tag.name, slug: tag.slug }))
+    : FALLBACK.map((name) => ({ name, slug: null }));
+
+  return (
+    <Fragment>
+      <div className="tag-list">
+        {items.map((val, i) => (
+          <Link
+            key={`${val.name}-${i}`}
+            href={val.slug ? `/blog?tag=${val.slug}` : "/blog"}
+          >
+            {val.name}
+          </Link>
+        ))}
+      </div>
+    </Fragment>
+  );
+};
+
+export default CategoryTag;

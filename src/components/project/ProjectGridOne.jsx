@@ -1,351 +1,118 @@
 "use client";
-import React, { Fragment } from 'react'
+
+import React, { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import { mediaUrl } from "@/lib/axios";
 
-const TabListContent = [
-    'All',
-    'Software',
-    'Web Security',
-    'IT Solutions',
-    'Technology',
-    'Cyber Security',
-];
+const ProjectCard = ({ project, index }) => {
+  const href = project.slug ? `/projects/${project.slug}` : "/projects";
+  const image = mediaUrl(project.featuredImage?.url);
 
-const AllContent = [
-    {
-      img:'project-1',
-      tag: 'Web Design',
-      pjname: 'Web Analytics',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-2',
-      tag: 'Cyber Secure',
-      pjname: 'Cyber Security Core',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-3',
-      tag: 'Mobile info',
-      pjname: 'Upcoming Phone',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-    {
-      img:'project-4',
-      tag: 'Graphic Design',
-      pjname: 'Design The Future',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-5',
-      tag: 'Development',
-      pjname: 'Web Cycle Develop',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-6',
-      tag: 'Apps Development',
-      pjname: 'Company Developmnet',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-    {
-      img:'project-7',
-      tag: 'App Case Study',
-      pjname: 'Full Apps Journey',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-8',
-      tag: 'Cyber Engineering',
-      pjname: 'Specialized Security',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-9',
-      tag: 'Chemical Engineering',
-      pjname: 'World Medicine Care',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-]
-const SoftwareContent = [
-    {
-      img:'project-1',
-      tag: 'Web Design',
-      pjname: 'Web Analytics',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-2',
-      tag: 'Cyber Secure',
-      pjname: 'Cyber Security Core',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-3',
-      tag: 'Mobile info',
-      pjname: 'Upcoming Phone',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-    {
-      img:'project-6',
-      tag: 'Apps Development',
-      pjname: 'Company Developmnet',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-]
-const WebSecurityContent = [
-    {
-      img:'project-1',
-      tag: 'Web Design',
-      pjname: 'Web Analytics',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-2',
-      tag: 'Cyber Secure',
-      pjname: 'Cyber Security Core',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-3',
-      tag: 'Mobile info',
-      pjname: 'Upcoming Phone',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-    {
-      img:'project-4',
-      tag: 'Graphic Design',
-      pjname: 'Design The Future',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-   
-]
-const IiSolutionsContent = [
-    {
-      img:'project-1',
-      tag: 'Web Design',
-      pjname: 'Web Analytics',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-8',
-      tag: 'Cyber Engineering',
-      pjname: 'Specialized Security',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-9',
-      tag: 'Chemical Engineering',
-      pjname: 'World Medicine Care',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-]
-const TechnologyContent = [
-   
-    {
-      img:'project-5',
-      tag: 'Development',
-      pjname: 'Web Cycle Develop',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-6',
-      tag: 'Apps Development',
-      pjname: 'Company Developmnet',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-    {
-      img:'project-7',
-      tag: 'App Case Study',
-      pjname: 'Full Apps Journey',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-8',
-      tag: 'Cyber Engineering',
-      pjname: 'Specialized Security',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-9',
-      tag: 'Chemical Engineering',
-      pjname: 'World Medicine Care',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-]
-const CyberSecurityContent = [
-   
-    {
-      img:'project-5',
-      tag: 'Development',
-      pjname: 'Web Cycle Develop',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-6',
-      tag: 'Apps Development',
-      pjname: 'Company Developmnet',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-    {
-      img:'project-7',
-      tag: 'App Case Study',
-      pjname: 'Full Apps Journey',
-      dataAos: 'fade-right',
-      dataDelay: '50'
-    },
-    {
-      img:'project-8',
-      tag: 'Cyber Engineering',
-      pjname: 'Specialized Security',
-      dataAos: 'fade-right',
-      dataDelay: '100'
-    },
-    {
-      img:'project-9',
-      tag: 'Chemical Engineering',
-      pjname: 'World Medicine Care',
-      dataAos: 'fade-right',
-      dataDelay: '150'
-    },
-]
+  return (
+    <div
+      className="col-lg-4 col-md-4 col-sm-6"
+      data-aos="fade-right"
+      data-aos-delay={50 + (index % 3) * 50}
+    >
+      <div className="feature-item mb-40">
+        <Link className="back-bg" href={href}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="w-100" src={image} alt={project.title || "Project"} />
+        </Link>
+        {project.category ? (
+          <h5>
+            <Link href={href}>{project.category}</Link>
+          </h5>
+        ) : null}
+        <h3>
+          <Link href={href}>{project.title}</Link>
+        </h3>
+      </div>
+    </div>
+  );
+};
 
-const ProjectGridOne = () => {
+const ProjectGridOne = ({ projects = [], filterTabs }) => {
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const tabs = useMemo(() => {
+    if (Array.isArray(filterTabs) && filterTabs.length > 0) {
+      return filterTabs.map(String);
+    }
+
+    const fromCms = new Set();
+    projects.forEach((project) => {
+      const tags = Array.isArray(project.filterTags) ? project.filterTags : [];
+      tags.forEach((tag) => {
+        if (tag) fromCms.add(String(tag));
+      });
+    });
+
+    return ["All", ...[...fromCms].sort()];
+  }, [filterTabs, projects]);
+
+  const panels = useMemo(() => {
+    return tabs.map((tab) => {
+      if (tab === "All") return projects;
+      return projects.filter((project) => {
+        const tags = Array.isArray(project.filterTags) ? project.filterTags : [];
+        return tags.includes(tab);
+      });
+    });
+  }, [projects, tabs]);
+
+  if (!projects.length) {
+    return (
+      <p className="text-white text-center mb-40">
+        No projects published in Strapi yet.
+      </p>
+    );
+  }
+
   return (
     <Fragment>
-        <Tabs>
-            <TabList className="row justify-content-center">
-                <div className="col-xxl-10 text-center">
-                    <div className="portfolio-menu mb-40">
-                    {TabListContent.map((tab,i)=>(
-                        <Tab key={i} className="gf_btn">{tab}</Tab>
-                        ))}
-                    </div>
+      <Tabs selectedIndex={tabIndex} onSelect={setTabIndex}>
+        <TabList className="row justify-content-center">
+          <div className="col-xxl-10 text-center">
+            <div className="portfolio-menu mb-40">
+              {tabs.map((tab) => (
+                <Tab key={tab} className="gf_btn">
+                  {tab}
+                </Tab>
+              ))}
+            </div>
+          </div>
+        </TabList>
+        {panels.map((items, panelIndex) => (
+          <TabPanel key={tabs[panelIndex]}>
+            <div
+              className={`${
+                panelIndex === 0 ? "" : "grid "
+              }row gx-4 gx-xxl-5 feature-slider pe-0`}
+            >
+              {items.length ? (
+                items.map((project, i) => (
+                  <ProjectCard
+                    key={project.slug || project.documentId || i}
+                    project={project}
+                    index={i}
+                  />
+                ))
+              ) : (
+                <div className="col-12">
+                  <p className="text-white text-center">
+                    No projects in this category.
+                  </p>
                 </div>
-            </TabList>
-            <TabPanel>
-                <div className="row gx-4 gx-xxl-5 feature-slider pe-0">
-                   {AllContent.map((val,i)=>(
-                     <div key={i} className="col-lg-4 col-md-4 col-sm-6" data-aos={val.dataAos} data-delay={val.dataDelay}>
-                        <div className="feature-item mb-40">
-                            <Link className="back-bg" href="/project-details"><img className="w-100" src={`assets/img/work/${val.img}.jpg`} alt="img" /></Link>
-                            <h5>
-                                <Link href="project-details">{val.tag}</Link>
-                            </h5>
-                            <h3><Link href="/project-details">{val.pjname}</Link></h3>
-                        </div>
-                    </div>
-                   ))}
-                </div>
-            </TabPanel>
-            <TabPanel>
-              <div className="grid row gx-4 gx-xxl-5 feature-slider pe-0">
-                   {SoftwareContent.map((val,i)=>(
-                     <div key={i} className="col-lg-4 col-md-4 col-sm-6 grid-item cat3 cat5" data-aos={val.dataAos} data-delay={val.dataDelay}>
-                        <div className="feature-item mb-40">
-                            <Link className="back-bg" href="/project-details"><img className="w-100" src={`assets/img/work/${val.img}.jpg`} alt="img" /></Link>
-                            <h5>
-                                <Link href="project-details">{val.tag}</Link>
-                            </h5>
-                            <h3><Link href="/project-details">{val.pjname}</Link></h3>
-                        </div>
-                    </div>
-                   ))}
-                </div>
-            </TabPanel>
-            <TabPanel>
-            <div className="grid row gx-4 gx-xxl-5 feature-slider pe-0">
-                   {WebSecurityContent.map((val,i)=>(
-                     <div key={i} className="col-lg-4 col-md-4 col-sm-6 grid-item cat3 cat5" data-aos={val.dataAos} data-delay={val.dataDelay}>
-                        <div className="feature-item mb-40">
-                            <Link className="back-bg" href="/project-details"><img className="w-100" src={`assets/img/work/${val.img}.jpg`} alt="img" /></Link>
-                            <h5>
-                                <Link href="project-details">{val.tag}</Link>
-                            </h5>
-                            <h3><Link href="/project-details">{val.pjname}</Link></h3>
-                        </div>
-                    </div>
-                   ))}
-                </div>
-            </TabPanel>
-            <TabPanel>
-              <div className="grid row gx-4 gx-xxl-5 feature-slider pe-0">
-                   {IiSolutionsContent.map((val,i)=>(
-                     <div key={i} className="col-lg-4 col-md-4 col-sm-6 grid-item cat3 cat5" data-aos={val.dataAos} data-delay={val.dataDelay}>
-                        <div className="feature-item mb-40">
-                            <Link className="back-bg" href="/project-details"><img className="w-100" src={`assets/img/work/${val.img}.jpg`} alt="img" /></Link>
-                            <h5>
-                                <Link href="project-details">{val.tag}</Link>
-                            </h5>
-                            <h3><Link href="/project-details">{val.pjname}</Link></h3>
-                        </div>
-                    </div>
-                   ))}
-                </div>
-            </TabPanel>
-            <TabPanel>
-            <div className="grid row gx-4 gx-xxl-5 feature-slider pe-0">
-                   {TechnologyContent.map((val,i)=>(
-                     <div key={i} className="col-lg-4 col-md-4 col-sm-6 grid-item cat3 cat5" data-aos={val.dataAos} data-delay={val.dataDelay}>
-                        <div className="feature-item mb-40">
-                            <Link className="back-bg" href="/project-details"><img className="w-100" src={`assets/img/work/${val.img}.jpg`} alt="img" /></Link>
-                            <h5>
-                                <Link href="project-details">{val.tag}</Link>
-                            </h5>
-                            <h3><Link href="/project-details">{val.pjname}</Link></h3>
-                        </div>
-                    </div>
-                   ))}
-                </div>
-            </TabPanel>
-            <TabPanel>
-            <div className="grid row gx-4 gx-xxl-5 feature-slider pe-0">
-                   {CyberSecurityContent.map((val,i)=>(
-                     <div key={i} className="col-lg-4 col-md-4 col-sm-6 grid-item cat3 cat5" data-aos={val.dataAos} data-delay={val.dataDelay}>
-                        <div className="feature-item mb-40">
-                            <Link className="back-bg" href="/project-details"><img className="w-100" src={`assets/img/work/${val.img}.jpg`} alt="cbr-img" /></Link>
-                            <h5>
-                                <Link href="project-details">{val.tag}</Link>
-                            </h5>
-                            <h3><Link href="/project-details">{val.pjname}</Link></h3>
-                        </div>
-                    </div>
-                   ))}
-                </div>
-            </TabPanel>
-            
-        </Tabs>
+              )}
+            </div>
+          </TabPanel>
+        ))}
+      </Tabs>
     </Fragment>
-  )
-}
+  );
+};
 
-export default ProjectGridOne
+export default ProjectGridOne;

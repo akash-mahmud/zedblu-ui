@@ -1,43 +1,38 @@
 "use client";
-import React,{Fragment} from 'react'
-import CommonSkill from './CommonSkill'
 
+import React, { Fragment } from "react";
+import CommonSkill from "./CommonSkill";
 
-const skillContent = [
-    {
-        value: '80',
-        title:'Web Security',
-    },
-    {
-        value: '90',
-        title:'UI/UX Design',
-    },
-    {
-        value: '88',
-        title:'Development',
-    },
-    {
-        value: '92',
-        title:'Design',
-    },
-]
+const DEFAULT_SKILLS = [
+  { value: 80, title: "Web Security" },
+  { value: 90, title: "UI/UX Design" },
+  { value: 88, title: "Development" },
+  { value: 92, title: "Design" },
+];
 
-const Skill = () => {
+const Skill = ({ items }) => {
+  const skillContent =
+    items?.length > 0
+      ? items.map((item) => ({
+          value: String(item.value ?? 0),
+          title: item.title || "",
+        }))
+      : DEFAULT_SKILLS;
 
-    return (
-        <Fragment>
-            <div className="row progressbar-wrapper mt-35 mb-15">
-               {skillContent.map((val,i)=>(
-                 <div key={i} className="col-lg-3 col-sm-6">
-                    <div className="progressbar-content text-center mb-45">
-                        <CommonSkill number={val.value} />
-                        <h4 className="semi-title">{val.title}</h4>
-                    </div>
-                </div>
-               ))}
+  return (
+    <Fragment>
+      <div className="row progressbar-wrapper mt-35 mb-15">
+        {skillContent.map((val, i) => (
+          <div key={`${val.title}-${i}`} className="col-lg-3 col-sm-6">
+            <div className="progressbar-content text-center mb-45">
+              <CommonSkill number={val.value} />
+              <h4 className="semi-title">{val.title}</h4>
             </div>
-        </Fragment>
-    )
-}
+          </div>
+        ))}
+      </div>
+    </Fragment>
+  );
+};
 
-export default Skill
+export default Skill;

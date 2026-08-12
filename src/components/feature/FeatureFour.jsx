@@ -1,94 +1,147 @@
 "use client";
-import React, {Fragment} from 'react'
-import Link from "next/link"
 
-const featuresContent =[
-    {
-        img:'line-round-5b',
-        icon:'icon-18b',
-        title:'Software Develop',
-        desc:'Dramatically supply transparent backward deliverables before caward comp internal or organic" sources.',
-        dataAos:'fade-up',
-        dataAosDown:'fade-down',
-        dataDelay: '',
-        dataDelayDown: '100',
-    },
-    {
-        img:'line-round-5b',
-        icon:'icon-19b',
-        title:'Web Developmet',
-        desc:'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        dataAos:'fade-up',
-        dataAosDown:'fade-down',
-        dataDelay: '100',
-        dataDelayDown: '100',
-    },
-    {
-        img:'line-round-5b',
-        icon:'icon-20b',
-        title:'UI/UX Design',
-        desc:'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        dataAos:'fade-up',
-        dataAosDown:'fade-down',
-        dataDelay: '150',
-        dataDelayDown: '100',
-    },
-    {
-        img:'line-round-5b',
-        icon:'icon-21b',
-        title:'Web Security',
-        desc:'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        dataAos:'fade-up',
-        dataAosDown:'fade-down',
-        dataDelay: '200',
-        dataDelayDown: '100',
-    },
-    {
-        img:'line-round-5b',
-        icon:'icon-22b',
-        title:'Apps Development',
-        desc:'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        dataAos:'fade-up',
-        dataAosDown:'fade-down',
-        dataDelay: '250',
-        dataDelayDown: '100',
-    },
-    {
-        img:'line-round-5b',
-        icon:'icon-23b',
-        title:'Programming',
-        desc:'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        dataAos:'fade-up',
-        dataAosDown:'fade-down',
-        dataDelay: '250',
-        dataDelayDown: '100',
-    },
-]
+import React, { Fragment } from "react";
+import Link from "next/link";
+import { mediaUrl } from "@/lib/axios";
 
-const FeatureFour = () => {
-    return (
-        <Fragment>
-            <div className="row gx-4 gx-xxl-5">
-                {featuresContent.map((val,i)=>(
-                    <div key={i} className="col-lg-4 col-md-6" data-aos={val.dataAos} data-aos-delay={val.dataDelay}>
-                    <div className="feature-style-four mb-45">
-                        <img
-                            className="shape-over"
-                            data-aos={val.dataAosDown}
-                            data-aos-delay={val.dataDelayDown}
-                            src={`assets/img/shape/${val.img}.svg`}
-                            alt="shape"/>
-                        <img src={`assets/img/icon/${val.icon}.svg`} alt="icon"/>
-                        <h2>
-                            <Link className="sect-title-two" href="/services-details">{val.title}</Link>
-                        </h2>
-                        <p>{val.desc}</p>
-                    </div>
-                </div>
-                ))}
+const FALLBACK_ICONS = [
+  "icon-18b",
+  "icon-19b",
+  "icon-20b",
+  "icon-21b",
+  "icon-22b",
+  "icon-23b",
+];
+
+const featuresContent = [
+  {
+    img: "line-round-5b",
+    icon: "icon-18b",
+    title: "Software Develop",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    slug: "software-develop",
+    dataAos: "fade-up",
+    dataAosDown: "fade-down",
+    dataDelay: "",
+    dataDelayDown: "100",
+  },
+  {
+    img: "line-round-5b",
+    icon: "icon-19b",
+    title: "Web Developmet",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    slug: "web-developmet",
+    dataAos: "fade-up",
+    dataAosDown: "fade-down",
+    dataDelay: "100",
+    dataDelayDown: "100",
+  },
+  {
+    img: "line-round-5b",
+    icon: "icon-20b",
+    title: "UI/UX Design",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    slug: "ui-ux-design",
+    dataAos: "fade-up",
+    dataAosDown: "fade-down",
+    dataDelay: "150",
+    dataDelayDown: "100",
+  },
+  {
+    img: "line-round-5b",
+    icon: "icon-21b",
+    title: "Web Security",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    slug: "web-security",
+    dataAos: "fade-up",
+    dataAosDown: "fade-down",
+    dataDelay: "200",
+    dataDelayDown: "100",
+  },
+  {
+    img: "line-round-5b",
+    icon: "icon-22b",
+    title: "Apps Development",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    slug: "apps-development",
+    dataAos: "fade-up",
+    dataAosDown: "fade-down",
+    dataDelay: "250",
+    dataDelayDown: "100",
+  },
+  {
+    img: "line-round-5b",
+    icon: "icon-23b",
+    title: "Programming",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    slug: "programming",
+    dataAos: "fade-up",
+    dataAosDown: "fade-down",
+    dataDelay: "250",
+    dataDelayDown: "100",
+  },
+];
+
+const FeatureFour = ({ services }) => {
+  const items =
+    services?.length > 0
+      ? services.map((service, index) => {
+          const fallback = FALLBACK_ICONS[index % FALLBACK_ICONS.length];
+          return {
+            title: service.title,
+            desc: service.shortDescription,
+            slug: service.slug,
+            iconUrl: mediaUrl(
+              service.icon?.url,
+              `/assets/img/icon/${fallback}.svg`,
+            ),
+            dataAos: "fade-up",
+            dataAosDown: "fade-down",
+            dataDelay: String(index * 50 || ""),
+            dataDelayDown: "100",
+          };
+        })
+      : featuresContent.map((item) => ({
+          ...item,
+          iconUrl: `/assets/img/icon/${item.icon}.svg`,
+        }));
+
+  return (
+    <Fragment>
+      <div className="row gx-4 gx-xxl-5">
+        {items.map((val, i) => (
+          <div
+            key={val.slug || val.title || i}
+            className="col-lg-4 col-md-6"
+            data-aos={val.dataAos}
+            data-aos-delay={val.dataDelay}
+          >
+            <div className="feature-style-four mb-45">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="shape-over"
+                data-aos={val.dataAosDown}
+                data-aos-delay={val.dataDelayDown}
+                src="/assets/img/shape/line-round-5b.svg"
+                alt=""
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={val.iconUrl} alt={val.title || "Service"} />
+              <h2>
+                <Link
+                  className="sect-title-two"
+                  href={val.slug ? `/services/${val.slug}` : "/services"}
+                >
+                  {val.title}
+                </Link>
+              </h2>
+              <p>{val.desc}</p>
             </div>
-        </Fragment>
-    )
-}
+          </div>
+        ))}
+      </div>
+    </Fragment>
+  );
+};
 
-export default FeatureFour
+export default FeatureFour;

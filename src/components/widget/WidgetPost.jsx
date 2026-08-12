@@ -1,55 +1,46 @@
 "use client";
-import React, {Fragment} from 'react'
-import Link from "next/link"
 
+import React, { Fragment } from "react";
+import Link from "next/link";
+import { mediaUrl } from "@/lib/axios";
 
-const WidgetPostContent =[
-    {
-        thumb: 'post-01',
-        desc: 'Seamlessl monetiz cent material bleeding.',
-        authorName: 'By Naile',
-        marginBottom: 'mb-20'
-    },
-    {
-        thumb: 'post-02',
-        desc: 'Seamlessl monetiz cent material bleeding.',
-        authorName: 'By Trust',
-        marginBottom: 'mb-20'
-    },
-    {
-        thumb: 'post-03',
-        desc: 'Seamlessl monetiz cent material bleeding.',
-        authorName: 'By Hamina',
-        marginBottom: 'mb-20'
-    },
-    {
-        thumb: 'post-04',
-        desc: 'Seamlessl monetiz cent material bleeding.',
-        authorName: 'By Anisa',
-        marginBottom: 'mb-20'
-    },
-]
+const WidgetPost = ({ posts = [] }) => {
+  const items = posts.length
+    ? posts.slice(0, 4).map((post, index) => ({
+        slug: post.slug,
+        title: post.title,
+        authorName: post.author?.name ? `By ${post.author.name}` : "By Admin",
+        thumb: mediaUrl(
+          post.featuredImage?.url,
+          `/assets/img/blog/post-0${(index % 4) + 1}.jpg`,
+        ),
+      }))
+    : [];
 
-const WidgetPost = () => {
-    return (
-        <Fragment>
-            <ul className="post-list">
-                {WidgetPostContent.map((val, i)=>(
-                     <li key={i}>
-                        <div className={`blog-post ${val.marginBottom}`}>
-                            <Link href="/blog-details-v1"><img src={`assets/img/blog/${val.thumb}.jpg`} alt="Post Img"/></Link>
-                            <div className="post-content">
-                                <h6 className="mb-10">
-                                    <Link href="/blog-details-v1">{val.desc}</Link>
-                                </h6>
-                                <span>{val.authorName}</span>
-                            </div>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </Fragment>
-    )
-}
+  if (!items.length) return null;
 
-export default WidgetPost
+  return (
+    <Fragment>
+      <ul className="post-list">
+        {items.map((val) => (
+          <li key={val.slug}>
+            <div className="blog-post mb-20">
+              <Link href={`/blog/${val.slug}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={val.thumb} alt={val.title || "Post"} />
+              </Link>
+              <div className="post-content">
+                <h6 className="mb-10">
+                  <Link href={`/blog/${val.slug}`}>{val.title}</Link>
+                </h6>
+                <span>{val.authorName}</span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Fragment>
+  );
+};
+
+export default WidgetPost;

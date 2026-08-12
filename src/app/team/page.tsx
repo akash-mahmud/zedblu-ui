@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getGlobal, getTeam } from "@/services/strapi";
 import { buildMetadata } from "@/lib/seo";
-import { mediaUrl } from "@/lib/axios";
 import ThemeMenuTwo from "@/components/header/ThemeMenuTwo";
 import PageTitle from "@/components/page-title/PageTitle";
 import FooterTwo from "@/components/footer/FooterTwo";
 import NewsletterTwo from "@/components/call-to-action/NewsletterTwo";
+import TeamTwoA from "@/components/team/TeamTwoA";
 
 export const revalidate = 60;
 
@@ -16,45 +15,27 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TeamPage() {
-  const team = await getTeam();
+  const [global, team] = await Promise.all([getGlobal(), getTeam()]);
 
   return (
     <div className="main-page-wrapper">
-      <ThemeMenuTwo />
+      <ThemeMenuTwo global={global} />
       <PageTitle title="Team" />
-      <section className="pt-100 pb-80">
+      <section className="techy-team team-sec-two mt-0 pt-145 pb-145 pt-lg-55 pb-lg-60">
         <div className="container">
-          <div className="row gx-4">
-            {team.map((member) => (
-              <div
-                className="col-lg-3 col-md-6 mb-40"
-                key={member.slug || member.documentId}
-              >
-                <div className="card-style-eleven text-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    className="w-100 mb-20"
-                    src={mediaUrl(
-                      member.profileImage?.url,
-                      "/assets/img/team/team-7e.jpg",
-                    )}
-                    alt={member.name || "Team"}
-                  />
-                  <h4>
-                    <Link href={`/team/${member.slug}`}>{member.name}</Link>
-                  </h4>
-                  {member.services?.length ? (
-                    <p>{member.services.map((s) => s.title).join(", ")}</p>
-                  ) : null}
-                </div>
+          <div className="row gx-4 gx-xxl-5">
+            <div className="col-lg-12">
+              <div className="section-title text-center mb-55">
+                <h6 className="sub-title mb-20">Our Team</h6>
+                <h2 className="sect-title">Expert Team Member</h2>
               </div>
-            ))}
-            {!team.length ? <p>No team members in Strapi yet.</p> : null}
+            </div>
           </div>
+          <TeamTwoA members={team} />
         </div>
       </section>
       <NewsletterTwo />
-      <FooterTwo />
+      <FooterTwo global={global} />
     </div>
   );
 }

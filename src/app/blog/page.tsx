@@ -1,64 +1,53 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { getBlogPosts, getGlobal } from "@/services/strapi";
+import { getBlogPostsPage, getGlobal } from "@/services/strapi";
 import { buildMetadata } from "@/lib/seo";
-import { mediaUrl } from "@/lib/axios";
 import ThemeMenuTwo from "@/components/header/ThemeMenuTwo";
 import PageTitle from "@/components/page-title/PageTitle";
 import FooterTwo from "@/components/footer/FooterTwo";
 import NewsletterTwo from "@/components/call-to-action/NewsletterTwo";
+import BlogStyleTwo from "@/components/blog/BlogStyleTwo";
+import BlogPagination from "@/components/blog/BlogPagination";
 
 export const revalidate = 60;
+
+const PAGE_SIZE = 6;
+
+type Props = {
+  searchParams: Promise<{ page?: string }>;
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobal();
   return buildMetadata({ title: "Blog", path: "/blog", global });
 }
 
-export default async function BlogPage() {
-  const [global, posts] = await Promise.all([getGlobal(), getBlogPosts()]);
+export default async function BlogPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const requestedPage = Math.max(1, Number(params.page) || 1);
+
+  const [global, firstResult] = await Promise.all([
+    getGlobal(),
+    getBlogPostsPage(requestedPage, PAGE_SIZE),
+  ]);
+
+  const pageCount = firstResult.pagination.pageCount || 0;
+  const page =
+    pageCount > 0
+      ? Math.min(requestedPage, pageCount)
+      : 1;
+  const result =
+    page === firstResult.pagination.page
+      ? firstResult
+      : await getBlogPostsPage(page, PAGE_SIZE);
 
   return (
     <div className="main-page-wrapper">
       <ThemeMenuTwo global={global} />
       <PageTitle title="Blog" />
-      <section className="pt-100 pb-80">
+      <section className="blog-grid-area pt-150 pb-105 pt-lg-60 pb-lg-15">
         <div className="container">
-          <div className="row gx-4">
-            {posts.map((post) => (
-              <div
-                className="col-lg-4 col-md-6 mb-40"
-                key={post.slug || post.documentId}
-              >
-                <article className="card-style-seven">
-                  <Link href={`/blog/${post.slug}`}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      className="w-100 mb-20"
-                      src={mediaUrl(
-                        post.featuredImage?.url,
-                        "/assets/img/blog/blog-03.jpg",
-                      )}
-                      alt={post.title || "Blog"}
-                    />
-                  </Link>
-                  <p className="mb-10">
-                    {[post.category?.name, post.author?.name]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </p>
-                  <h4>
-                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                  </h4>
-                  <p>{post.excerpt}</p>
-                  <Link className="read-btn" href={`/blog/${post.slug}`}>
-                    Read More
-                  </Link>
-                </article>
-              </div>
-            ))}
-            {!posts.length ? <p>No blog posts published yet.</p> : null}
-          </div>
+          <BlogStyleTwo posts={result.posts} />
+          <BlogPagination page={page} pageCount={pageCount} />
         </div>
       </section>
       <NewsletterTwo />

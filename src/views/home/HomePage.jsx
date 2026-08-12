@@ -5,7 +5,10 @@ import Link from "next/link";
 import ThemeMenuTwo from "@/components/header/ThemeMenuTwo";
 import ThemeBannerTwo from "@/components/theme-banner/ThemeBannerTwo";
 import FooterTwo from "@/components/footer/FooterTwo";
+import FeatureFour from "@/components/feature/FeatureFour";
+import TeamTwoA from "@/components/team/TeamTwoA";
 import CommonCounter from "@/components/counter/CommonCounter";
+import CaseSliderOne from "@/components/case-study/CaseSliderOne";
 import { mediaUrl } from "@/lib/axios";
 
 function SectionTitle({ heading, center = true }) {
@@ -152,31 +155,8 @@ export default function HomePage({ homepage, global }) {
           <section className="our-services service-bg-two pt-95 pb-50">
             <div className="container">
               <SectionTitle heading={homepage?.servicesHeading} />
-              <div className="row gx-4">
-                {(homepage?.homepageServices || []).map((service) => (
-                  <div
-                    className="col-lg-4 col-md-6 mb-40"
-                    key={service.slug || service.documentId}
-                    data-aos="fade-up"
-                  >
-                    <div className="card-style-four text-center p-4 h-100">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={mediaUrl(service.icon?.url)}
-                        alt={service.title || "Service"}
-                        style={{ height: 48, marginBottom: 16 }}
-                      />
-                      <h4 className="mb-15">
-                        <Link href={`/services/${service.slug}`}>
-                          {service.title}
-                        </Link>
-                      </h4>
-                      <p>{service.shortDescription}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="text-center">
+              <FeatureFour services={homepage?.homepageServices || []} />
+              <div className="text-center mt-20 mb-30">
                 <Link className="theme_btn" href="/services">
                   All Services
                 </Link>
@@ -229,37 +209,50 @@ export default function HomePage({ homepage, global }) {
         ) : null}
 
         {homepage?.showProjects !== false ? (
-          <section className="latest-case-work pt-120 pb-80">
+          <section className="latest-case-work slick-nav blog-slick pt-145 pb-150 pt-lg-60 pb-lg-120">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="case-shape shape-1b d-none d-lg-inline-block"
+              src="/assets/img/shape/star-3b.svg"
+              alt=""
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="case-shape shape-2b d-none d-lg-inline-block"
+              src="/assets/img/shape/star-4b.svg"
+              alt=""
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="case-shape shape-3b d-none d-lg-inline-block"
+              src="/assets/img/shape/star-2.svg"
+              alt=""
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="case-shape shape-4b d-none d-lg-inline-block"
+              src="/assets/img/shape/star-5b.svg"
+              alt=""
+            />
             <div className="container">
-              <SectionTitle heading={homepage?.projectsHeading} />
-              <div className="row gx-4">
-                {(homepage?.homepageProjects || []).map((project) => (
-                  <div
-                    className="col-lg-4 col-md-6 mb-40"
-                    key={project.slug || project.documentId}
-                  >
-                    <div className="card-style-nine">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        className="w-100 mb-20"
-                        src={mediaUrl(project.featuredImage?.url)}
-                        alt={project.title || "Project"}
-                      />
-                      <h4>
-                        <Link href={`/projects/${project.slug}`}>
-                          {project.title}
-                        </Link>
-                      </h4>
-                      <p>{project.company?.name}</p>
-                    </div>
+              <div className="row gx-4 gx-xxl-5 align-items-center">
+                <div className="col-xl-5 col-lg-6 col-md-8">
+                  <div className="section-title mb-55 text-md-start text-center">
+                    <h6 className="sub-title mb-20" data-aos="fade-up">
+                      {homepage?.projectsHeading?.eyebrow || "Latest Works"}
+                    </h6>
+                    <h3
+                      className="sect-title mb-25"
+                      data-aos="fade-up"
+                      data-aos-delay={100}
+                    >
+                      {homepage?.projectsHeading?.title ||
+                        "Check out some great case studies"}
+                    </h3>
                   </div>
-                ))}
+                </div>
               </div>
-              <div className="text-center">
-                <Link className="theme_btn" href="/projects">
-                  All Projects
-                </Link>
-              </div>
+              <CaseSliderOne projects={homepage?.homepageProjects || []} />
             </div>
           </section>
         ) : null}
@@ -290,34 +283,20 @@ export default function HomePage({ homepage, global }) {
         ) : null}
 
         {homepage?.showTeam !== false ? (
-          <section className="gradient-bg techy-team pt-120 pb-100">
+          <section className="techy-team team-sec-two pt-120 pb-100">
             <div className="container">
               <SectionTitle heading={homepage?.teamHeading} />
-              <div className="row gx-4">
-                {(homepage?.homepageTeam || []).map((member) => (
-                  <div
-                    className="col-lg-3 col-md-6 mb-40"
-                    key={member.slug || member.documentId}
-                  >
-                    <div className="card-style-eleven text-center">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        className="w-100 mb-20"
-                        src={mediaUrl(member.profileImage?.url)}
-                        alt={member.name || "Team"}
-                      />
-                      <h4>
-                        <Link href={`/team/${member.slug}`}>{member.name}</Link>
-                      </h4>
-                      {member.jobTitle ? <p>{member.jobTitle}</p> : null}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="text-center pt-15">
-                <Link className="theme_btn" href="/team">
-                  See All Members
-                </Link>
+              <TeamTwoA members={homepage?.homepageTeam || []} />
+              <div className="row gx-4 gx-xxl-5">
+                <div
+                  className="col-lg-12 text-center pt-15"
+                  data-aos="fade-up"
+                  data-aos-delay={200}
+                >
+                  <Link className="theme_btn" href="/team">
+                    See All Member
+                  </Link>
+                </div>
               </div>
             </div>
           </section>

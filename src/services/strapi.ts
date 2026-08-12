@@ -8,6 +8,7 @@ import type {
   HomepageContent,
   InquiryPayload,
   Project,
+  ProjectsPageContent,
   Review,
   Service,
   ServiceCategory,
@@ -36,9 +37,18 @@ async function getList<T>(
   try {
     const { data } = await api.get<StrapiListResponse<T>>(path, { params });
     return data.data ?? [];
-  } catch {
+  } catch (error) {
+    console.error(`[strapi] GET ${path} failed:`, error);
     return [];
   }
+}
+
+async function getListStrict<T>(
+  path: string,
+  params?: Record<string, unknown>,
+): Promise<T[]> {
+  const { data } = await api.get<StrapiListResponse<T>>(path, { params });
+  return data.data ?? [];
 }
 
 export async function getGlobal() {
@@ -96,16 +106,29 @@ export async function getAboutPage() {
   });
 }
 
+export async function getProjectsPage() {
+  return getSingle<ProjectsPageContent>("/projects-page", {
+    populate: {
+      heading: true,
+      downloadButtons: { populate: ["file"] },
+      seo: { populate: ["shareImage"] },
+    },
+  });
+}
+
 export async function getProjects(params?: Record<string, unknown>) {
   return getList<Project>("/projects", {
     populate: {
       featuredImage: true,
+      bannerImage: true,
       company: { populate: ["logo"] },
       technologies: { populate: ["icon"] },
       services: true,
       team: { populate: ["profileImage"] },
+      stats: true,
+      downloadButtons: { populate: ["file"] },
     },
-    sort: ["completionDate:desc"],
+    sort: ["sortOrder:asc", "createdAt:asc"],
     pagination: { pageSize: 100 },
     ...params,
   });
@@ -116,11 +139,16 @@ export async function getProjectBySlug(slug: string) {
     filters: { slug: { $eq: slug } },
     populate: {
       featuredImage: true,
+      bannerImage: true,
+      videoImage: true,
+      gallery: true,
       company: { populate: ["logo"] },
       technologies: { populate: ["icon"] },
       services: true,
       team: { populate: ["profileImage", "socialLinks"] },
       reviews: true,
+      stats: true,
+      downloadButtons: { populate: ["file"] },
     },
   });
   return items[0] ?? null;
@@ -130,9 +158,12 @@ export async function getServices(params?: Record<string, unknown>) {
   return getList<Service>("/services", {
     populate: {
       icon: true,
+      featuredImage: true,
       category: { populate: ["icon"] },
       providers: { populate: ["profileImage"] },
       priceRange: true,
+      specializations: true,
+      stats: true,
     },
     pagination: { pageSize: 100 },
     ...params,
@@ -140,17 +171,43 @@ export async function getServices(params?: Record<string, unknown>) {
 }
 
 export async function getServiceBySlug(slug: string) {
-  const items = await getList<Service>("/services", {
-    filters: { slug: { $eq: slug } },
-    populate: {
-      icon: true,
-      category: { populate: ["icon"] },
-      providers: { populate: ["profileImage", "socialLinks"] },
-      projects: { populate: ["featuredImage"] },
-      priceRange: true,
-    },
-  });
-  return items[0] ?? null;
+  try {
+    const items = await getListStrict<Service>("/services", {
+      filters: { slug: { $eq: slug } },
+      populate: {
+        icon: true,
+        featuredImage: true,
+        gallery: true,
+        category: { populate: ["icon"] },
+        providers: { populate: ["profileImage", "socialLinks"] },
+        projects: { populate: ["featuredImage"] },
+        priceRange: true,
+        specializations: true,
+        stats: true,
+      },
+    });
+    return items[0] ?? null;
+  } catch (error) {
+    // Fallback with lighter populate if deep populate fails
+    console.error(`[strapi] getServiceBySlug(${slug}) failed, retrying:`, error);
+    try {
+      const items = await getListStrict<Service>("/services", {
+        filters: { slug: { $eq: slug } },
+        populate: {
+          icon: true,
+          featuredImage: true,
+          gallery: true,
+          specializations: true,
+          stats: true,
+          priceRange: true,
+        },
+      });
+      return items[0] ?? null;
+    } catch (retryError) {
+      console.error(`[strapi] getServiceBySlug(${slug}) retry failed:`, retryError);
+      throw retryError;
+    }
+  }
 }
 
 export async function getTeam(params?: Record<string, unknown>) {
@@ -173,6 +230,7 @@ export async function getTeamMemberBySlug(slug: string) {
       profileImage: true,
       socialLinks: true,
       services: true,
+      skills: true,
       projects: { populate: ["featuredImage"] },
       blogPosts: { populate: ["featuredImage"] },
     },
@@ -195,6 +253,38 @@ export async function getBlogPosts(params?: Record<string, unknown>) {
   });
 }
 
+export async function getBlogPostsPage(page = 1, pageSize = 6) {
+  try {
+    const { data } = await api.get<StrapiListResponse<BlogPost>>("/blog-posts", {
+      params: {
+        populate: {
+          featuredImage: true,
+          author: { populate: ["profileImage"] },
+          category: true,
+          tags: true,
+          seo: { populate: ["shareImage"] },
+        },
+        sort: ["publishedAt:desc"],
+        pagination: { page, pageSize },
+      },
+    });
+    return {
+      posts: data.data ?? [],
+      pagination: data.meta?.pagination ?? {
+        page,
+        pageSize,
+        pageCount: 0,
+        total: 0,
+      },
+    };
+  } catch {
+    return {
+      posts: [],
+      pagination: { page: 1, pageSize, pageCount: 0, total: 0 },
+    };
+  }
+}
+
 export async function getBlogPostBySlug(slug: string) {
   const items = await getList<BlogPost>("/blog-posts", {
     filters: { slug: { $eq: slug } },
@@ -207,6 +297,28 @@ export async function getBlogPostBySlug(slug: string) {
     },
   });
   return items[0] ?? null;
+}
+
+export async function getBlogCategories() {
+  return getList<{
+    name?: string;
+    slug?: string;
+    blogPosts?: unknown[];
+  }>("/blog-categories", {
+    populate: { blogPosts: true },
+    pagination: { pageSize: 50 },
+  }).then((items) =>
+    items.map((item) => ({
+      ...item,
+      count: Array.isArray(item.blogPosts) ? item.blogPosts.length : 0,
+    })),
+  );
+}
+
+export async function getBlogTags() {
+  return getList<{ name?: string; slug?: string }>("/blog-tags", {
+    pagination: { pageSize: 50 },
+  });
 }
 
 export async function getReviews(

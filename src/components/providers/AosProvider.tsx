@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import AOS from "aos";
 
 export default function AosProvider({
@@ -8,17 +9,24 @@ export default function AosProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
   useEffect(() => {
     AOS.init({
       duration: 1200,
       once: true,
       offset: 80,
+      easing: "ease",
+      disable: false,
     });
   }, []);
 
   useEffect(() => {
-    AOS.refresh();
-  });
+    const timer = window.setTimeout(() => {
+      AOS.refreshHard();
+    }, 100);
+    return () => window.clearTimeout(timer);
+  }, [pathname]);
 
   return <>{children}</>;
 }

@@ -124,6 +124,8 @@ export default function ThemeMenuTwo({ global = null }: ThemeMenuTwoProps) {
             </div>
           </div>
         </div>
+        {/* Reserve nav height when sticky so the page does not jump */}
+        {sticky ? <div className="sticky-menu-spacer" aria-hidden="true" /> : null}
         <MobileMenu onClick={() => setMenu("")} active={menu} />
       </header>
     </Fragment>

@@ -1,19 +1,33 @@
 "use client";
-import React,{Fragment} from 'react'
 
-const handleSubmit =(e)=> {
-    e.preventDefault();
-}
+import React, { Fragment, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const SearchForm = () => {
-    return (
-        <Fragment>
-            <form className="subscribe-form" action="#" onSubmit={handleSubmit}>
-                <input type="text" placeholder="Search Anything"/>
-                <button className="widget-btn"><i className="bi bi-search"/></button>
-            </form>
-        </Fragment>
-    )
-}
+  const router = useRouter();
+  const [query, setQuery] = useState("");
 
-export default SearchForm
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const q = query.trim();
+    router.push(q ? `/blog?q=${encodeURIComponent(q)}` : "/blog");
+  };
+
+  return (
+    <Fragment>
+      <form className="subscribe-form" action="#" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Search Anything"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button className="widget-btn" type="submit" aria-label="Search">
+          <i className="bi bi-search" />
+        </button>
+      </form>
+    </Fragment>
+  );
+};
+
+export default SearchForm;

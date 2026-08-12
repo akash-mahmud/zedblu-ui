@@ -168,17 +168,78 @@ export type Project = {
   id?: number;
   title?: string;
   slug?: string;
+  category?: string | null;
+  filterTags?: string[] | null;
+  shortDescription?: string | null;
   description?: string | null;
+  bodyDescription?: string | null;
+  clientName?: string | null;
   clientLink?: string | null;
   projectUrl?: string | null;
+  projectType?: string | null;
+  startDate?: string | null;
   completionDate?: string | null;
+  duration?: string | null;
+  location?: string | null;
+  employees?: string | null;
+  results?: string | null;
+  tags?: string | null;
+  challengeDescription?: string | null;
+  challengeItems?: string[] | null;
+  goalsDescription?: string | null;
+  solutionsDescription?: string | null;
+  stats?: { value?: number; suffix?: string | null; label?: string }[];
+  videoUrl?: string | null;
   status?: string;
+  sortOrder?: number | null;
   featuredImage?: StrapiMedia;
+  bannerImage?: StrapiMedia;
+  videoImage?: StrapiMedia;
+  gallery?: StrapiMedia[];
+  downloadButtons?: {
+    label?: string;
+    url?: string | null;
+    file?: StrapiMedia;
+  }[];
   company?: Company | null;
   services?: Service[];
   team?: ServiceProvider[];
   technologies?: Technology[];
   reviews?: Review[];
+};
+
+export type ProjectsPageContent = {
+  documentId?: string;
+  id?: number;
+  pageTitle?: string | null;
+  heading?: {
+    eyebrow?: string | null;
+    title?: string;
+    description?: string | null;
+  } | null;
+  filterTabs?: string[] | null;
+  showLoadMore?: boolean;
+  loadMoreText?: string | null;
+  loadMoreUrl?: string | null;
+  relatedProjectsHeading?: string | null;
+  showRelatedProjects?: boolean;
+  infoHeading?: string | null;
+  challengeHeading?: string | null;
+  goalsHeading?: string | null;
+  solutionsHeading?: string | null;
+  contactWidgetTitle?: string | null;
+  contactWidgetDescription?: string | null;
+  showServiceSidebar?: boolean;
+  downloadButtons?: {
+    label?: string;
+    url?: string | null;
+    file?: StrapiMedia;
+  }[];
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    shareImage?: StrapiMedia;
+  } | null;
 };
 
 export type Service = {
@@ -187,8 +248,20 @@ export type Service = {
   title?: string;
   slug?: string;
   shortDescription?: string | null;
+  introDescription?: string | null;
   detailedContent?: string | null;
   icon?: StrapiMedia;
+  featuredImage?: StrapiMedia;
+  gallery?: StrapiMedia[];
+  specializedHeading?: string | null;
+  specializedDescription?: string | null;
+  specializations?: { title?: string; value?: number }[];
+  skillsHeading?: string | null;
+  skillsDescription?: string | null;
+  relyHeading?: string | null;
+  relyDescription?: string | null;
+  highlights?: string[] | null;
+  stats?: { value?: number; suffix?: string | null; label?: string }[];
   priceRange?: {
     label?: string | null;
     minPrice?: number | null;
@@ -217,6 +290,14 @@ export type ServiceProvider = {
   slug?: string;
   bio?: string | null;
   jobTitle?: string | null;
+  roles?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  experience?: string | null;
+  skillLevel?: string | null;
+  languages?: string | null;
+  skillsDescription?: string | null;
+  skills?: { title?: string; value?: number }[];
   profileImage?: StrapiMedia;
   socialLinks?: SocialLink[];
   activeStatus?: boolean;

@@ -1,54 +1,28 @@
 "use client";
-import React, {Fragment} from 'react'
-import Link from "next/link"
 
-const categoryContent = [
-    {
-        category: 'Software Development',
-        icon: 'bi bi-arrow-right-short',
-        routerPath: '/project-grid'
-    },
-    {
-        category: 'Web Security',
-        icon: 'bi bi-arrow-right-short',
-        routerPath: '/project-grid'
-    },
-    {
-        category: 'UI/UX Design',
-        icon: 'bi bi-arrow-right-short',
-        routerPath: '/project-grid'
-    },
-    {
-        category: 'Apps Development',
-        icon: 'bi bi-arrow-right-short',
-        routerPath: '/project-grid'
-    },
-    {
-        category: 'Programming',
-        icon: 'bi bi-arrow-right-short',
-        routerPath: '/project-grid'
-    },
-    {
-        category: 'Web Development',
-        icon: 'bi bi-arrow-right-short',
-        routerPath: '/project-grid'
-    },
-]
+import React, { Fragment } from "react";
+import Link from "next/link";
 
-const ServiceCategory = () => {
-    return (
-        <Fragment>
-            <ul className="list-none service-widget">
-                {categoryContent.map((val, i)=>(
-                    <li key={i}>
-                        <Link href={val.routerPath}>Software Development
-                            <span className="f-right"><i className={val.icon}/></span>
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </Fragment>
-    )
-}
+const ServiceCategory = ({ services = [], currentSlug }) => {
+  return (
+    <Fragment>
+      <ul className="list-none service-widget">
+        {services.map((service) => (
+          <li key={service.slug || service.documentId}>
+            <Link
+              href={`/services/${service.slug}`}
+              className={currentSlug === service.slug ? "active" : undefined}
+            >
+              {service.title}
+              <span className="f-right">
+                <i className="bi bi-arrow-right-short" />
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </Fragment>
+  );
+};
 
-export default ServiceCategory
+export default ServiceCategory;

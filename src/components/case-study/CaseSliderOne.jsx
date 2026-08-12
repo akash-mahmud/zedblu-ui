@@ -1,90 +1,69 @@
 "use client";
-import React, {Fragment} from 'react'
-import Link from "next/link"
-import Slider from 'react-slick';
 
-const caseContent = [
-    {
-        img: 'case-1b',
-        tag: 'Web Design',
-        title: 'Web Analytics',
-        desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        icon: 'bi bi-arrow-up-right',
-    },
-    {
-        img: 'case-2b',
-        tag: 'Cyber Secure',
-        title: 'Cyber Security Core',
-        desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        icon: 'bi bi-arrow-up-right',
-    },
-    {
-        img: 'case-3b',
-        tag: 'Design',
-        title: 'Design For Future',
-        desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        icon: 'bi bi-arrow-up-right',
-    },
-    {
-        img: 'case-1b',
-        tag: 'Web Design',
-        title: 'Web Analytics',
-        desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
-        icon: 'bi bi-arrow-up-right',
-    },
-    
-];
+import React, { Fragment } from "react";
+import Link from "next/link";
+import Slider from "react-slick";
+import { mediaUrl } from "@/lib/axios";
 
 const settings = {
-    dots: false,
-    arrows: true,
-    infinite: true,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-
-    responsive: [
-         {
-            breakpoint: 991,
-            settings: {
-                slidesToShow: 2
-            }
-        }, {
-            breakpoint: 575,
-            settings: {
-                slidesToShow: 1,
-                arrows:false,
-            }
-        }
-    ]
+  dots: false,
+  arrows: true,
+  infinite: true,
+  autoplay: true,
+  autoplaySpeed: 2000,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  responsive: [
+    { breakpoint: 991, settings: { slidesToShow: 2 } },
+    { breakpoint: 575, settings: { slidesToShow: 1, arrows: false } },
+  ],
 };
 
+const CaseSliderOne = ({ projects = [] }) => {
+  if (!projects.length) return null;
 
-const CaseSliderOne = () => {
-    return (
-        <Fragment>
-            <Slider {...settings} className="row gx-0 px-0 case-slider-one" data-aos="fade-up" data-aos-delay={200}>
-                {caseContent.map((val, i)=>(
-                    <div key={i} className="col-lg-4">
-                        <div className="case-item-one">
-                            <div className="case-thumb">
-                                <img className="w-100" src={`assets/img/work/${val.img}.jpg`} alt="img"/>
-                            </div>
-                            <div className="case-content">
-                                <span>{val.tag}</span>
-                                <h3>
-                                    <Link className="sect-title-two" href="/project-details">{val.title}</Link>
-                                </h3>
-                                <p>{val.desc}</p>
-                                <Link className="case-btn" href="/project-details"><i className={val.icon}/></Link>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </Slider>
-        </Fragment>
-    )
-}
+  return (
+    <Fragment>
+      <Slider
+        {...settings}
+        className="row gx-0 px-0 case-slider-one"
+        data-aos="fade-up"
+        data-aos-delay={200}
+      >
+        {projects.map((project, i) => {
+          const href = project.slug ? `/projects/${project.slug}` : "/projects";
+          const image = mediaUrl(project.featuredImage?.url);
+          const desc = project.shortDescription || "";
+          return (
+            <div key={project.slug || project.documentId || i} className="col-lg-4">
+              <div className="case-item-one">
+                <div className="case-thumb">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="w-100" src={image} alt={project.title || "Project"} />
+                </div>
+                <div className="case-content">
+                  {project.category ? <span>{project.category}</span> : null}
+                  <h3>
+                    <Link className="sect-title-two" href={href}>
+                      {project.title}
+                    </Link>
+                  </h3>
+                  {desc ? (
+                    <p>
+                      {desc.length > 140 ? `${desc.slice(0, 137)}...` : desc}
+                    </p>
+                  ) : null}
+                  <Link className="case-btn" href={href}>
+                    <i className="bi bi-arrow-up-right" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </Slider>
+    </Fragment>
+  );
+};
 
-export default CaseSliderOne
+export default CaseSliderOne;
