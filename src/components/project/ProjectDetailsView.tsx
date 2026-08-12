@@ -8,8 +8,27 @@ import ProjectMasonryTwo from "@/components/project/ProjectMasonryTwo";
 import ServiceCategory from "@/components/widget/ServiceCategory";
 import WidgetForm from "@/components/form/WidgetForm";
 import CaseSliderOne from "@/components/case-study/CaseSliderOne";
+import type {
+  Project,
+  ProjectsPageContent,
+  Service,
+  StrapiMedia,
+} from "@/types/strapi";
 
-const formatDate = (value) => {
+type DownloadItem = {
+  label?: string;
+  url?: string | null;
+  file?: StrapiMedia;
+};
+
+type ProjectDetailsViewProps = {
+  project: Project;
+  page?: ProjectsPageContent | null;
+  services?: Service[];
+  relatedProjects?: Project[];
+};
+
+const formatDate = (value?: string | null) => {
   if (!value) return null;
   try {
     return new Date(value).toLocaleDateString("en-GB", {
@@ -22,7 +41,7 @@ const formatDate = (value) => {
   }
 };
 
-const resolveDownloadHref = (item) => {
+const resolveDownloadHref = (item?: DownloadItem | null) => {
   if (item?.file?.url) return mediaUrl(item.file.url);
   if (item?.url) return item.url;
   return null;
@@ -33,7 +52,7 @@ const ProjectDetailsView = ({
   page,
   services = [],
   relatedProjects = [],
-}) => {
+}: ProjectDetailsViewProps) => {
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen((prev) => !prev);
 
@@ -72,8 +91,8 @@ const ProjectDetailsView = ({
   ].filter((row) => row.value);
 
   const downloads =
-    project.downloadButtons?.length > 0
-      ? project.downloadButtons
+    (project.downloadButtons?.length ?? 0) > 0
+      ? project.downloadButtons || []
       : page?.downloadButtons || [];
 
   const showRelated = page?.showRelatedProjects !== false;

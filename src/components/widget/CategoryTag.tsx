@@ -2,6 +2,7 @@
 
 import React, { Fragment } from "react";
 import Link from "next/link";
+import type { BlogTag } from "@/types/strapi";
 
 const FALLBACK = [
   "Web Solution",
@@ -11,10 +12,14 @@ const FALLBACK = [
   "HTML",
 ];
 
-const CategoryTag = ({ tags = [] }) => {
+type CategoryTagProps = {
+  tags?: Pick<BlogTag, "name" | "slug">[];
+};
+
+const CategoryTag = ({ tags = [] }: CategoryTagProps) => {
   const items = tags.length
     ? tags.map((tag) => ({ name: tag.name, slug: tag.slug }))
-    : FALLBACK.map((name) => ({ name, slug: null }));
+    : FALLBACK.map((name) => ({ name, slug: null as string | null }));
 
   return (
     <Fragment>

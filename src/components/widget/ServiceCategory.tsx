@@ -2,8 +2,17 @@
 
 import React, { Fragment } from "react";
 import Link from "next/link";
+import type { Service } from "@/types/strapi";
 
-const ServiceCategory = ({ services = [], currentSlug }) => {
+type ServiceCategoryProps = {
+  services?: Service[];
+  currentSlug?: string;
+};
+
+const ServiceCategory = ({
+  services = [],
+  currentSlug,
+}: ServiceCategoryProps) => {
   return (
     <Fragment>
       <ul className="list-none service-widget">

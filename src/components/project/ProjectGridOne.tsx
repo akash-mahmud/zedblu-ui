@@ -5,8 +5,14 @@ import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { mediaUrl } from "@/lib/axios";
+import type { Project } from "@/types/strapi";
 
-const ProjectCard = ({ project, index }) => {
+type ProjectCardProps = {
+  project: Project;
+  index: number;
+};
+
+const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const href = project.slug ? `/projects/${project.slug}` : "/projects";
   const image = mediaUrl(project.featuredImage?.url);
 
@@ -34,7 +40,15 @@ const ProjectCard = ({ project, index }) => {
   );
 };
 
-const ProjectGridOne = ({ projects = [], filterTabs }) => {
+type ProjectGridOneProps = {
+  projects?: Project[];
+  filterTabs?: string[] | null;
+};
+
+const ProjectGridOne = ({
+  projects = [],
+  filterTabs,
+}: ProjectGridOneProps) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const tabs = useMemo(() => {
@@ -42,7 +56,7 @@ const ProjectGridOne = ({ projects = [], filterTabs }) => {
       return filterTabs.map(String);
     }
 
-    const fromCms = new Set();
+    const fromCms = new Set<string>();
     projects.forEach((project) => {
       const tags = Array.isArray(project.filterTags) ? project.filterTags : [];
       tags.forEach((tag) => {

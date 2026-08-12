@@ -3,8 +3,13 @@
 import React, { Fragment } from "react";
 import Link from "next/link";
 import { mediaUrl } from "@/lib/axios";
+import type { BlogPost } from "@/types/strapi";
 
-const WidgetPost = ({ posts = [] }) => {
+type WidgetPostProps = {
+  posts?: BlogPost[];
+};
+
+const WidgetPost = ({ posts = [] }: WidgetPostProps) => {
   const items = posts.length
     ? posts.slice(0, 4).map((post, index) => ({
         slug: post.slug,

@@ -2,6 +2,7 @@
 
 import React, { Fragment } from "react";
 import Link from "next/link";
+import type { BlogTag } from "@/types/strapi";
 
 const DEFAULT_TAGS = [
   { tag: "IT Solutions", href: "/blog" },
@@ -16,7 +17,12 @@ const SocialContent = [
   { icon: "fab fa-youtube", routerPath: "https://www.youtube.com/" },
 ];
 
-const SocialMedia = ({ bgColor = "theme-bg", tags = [] }) => {
+type SocialMediaProps = {
+  bgColor?: string;
+  tags?: Pick<BlogTag, "name" | "slug">[];
+};
+
+const SocialMedia = ({ bgColor = "theme-bg", tags = [] }: SocialMediaProps) => {
   const tagItems = tags.length
     ? tags.map((tag) => ({
         tag: tag.name,

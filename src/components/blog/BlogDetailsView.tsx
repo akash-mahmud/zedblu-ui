@@ -12,8 +12,17 @@ import SearchForm from "@/components/form/SearchForm";
 import CategoryWidgetTwo from "@/components/widget/CategoryWidgetTwo";
 import WidgetPost from "@/components/widget/WidgetPost";
 import CategoryTag from "@/components/widget/CategoryTag";
+import type { BlogCategory, BlogPost, BlogTag } from "@/types/strapi";
 
-function formatDate(value) {
+type BlogDetailsViewProps = {
+  post: BlogPost;
+  recentPosts?: BlogPost[];
+  popularPosts?: BlogPost[];
+  categories?: BlogCategory[];
+  tags?: BlogTag[];
+};
+
+function formatDate(value?: string | null) {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
@@ -24,21 +33,21 @@ function formatDate(value) {
   });
 }
 
-function postTagsLabel(post) {
+function postTagsLabel(post: BlogPost) {
   const names = [
     ...(post.tags || []).map((tag) => tag.name),
     post.category?.name,
-  ].filter(Boolean);
+  ].filter(Boolean) as string[];
   return [...new Set(names)].join(" , ") || "Research , Technology";
 }
 
-const BlogDetailsView = ({
+export default function BlogDetailsView({
   post,
   recentPosts = [],
   popularPosts = [],
   categories = [],
   tags = [],
-}) => {
+}: BlogDetailsViewProps) {
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen((prev) => !prev);
 
@@ -49,8 +58,9 @@ const BlogDetailsView = ({
   const authorName = post.author?.name || "Admin";
   const dateLabel = formatDate(post.publishedAt);
 
-  const handleBodyClick = (event) => {
-    const trigger = event.target.closest?.(".popup-video");
+  const handleBodyClick = (event: React.MouseEvent | React.KeyboardEvent) => {
+    const target = event.target as HTMLElement | null;
+    const trigger = target?.closest?.(".popup-video");
     if (trigger) {
       event.preventDefault();
       openModal();
@@ -106,7 +116,9 @@ const BlogDetailsView = ({
                     dangerouslySetInnerHTML={{ __html: post.body }}
                   />
                 ) : (
-                  <p className="text-white">No content published for this post yet.</p>
+                  <p className="text-white">
+                    No content published for this post yet.
+                  </p>
                 )}
               </div>
 
@@ -165,6 +177,4 @@ const BlogDetailsView = ({
       </section>
     </Fragment>
   );
-};
-
-export default BlogDetailsView;
+}

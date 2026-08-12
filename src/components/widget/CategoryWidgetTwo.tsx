@@ -2,16 +2,26 @@
 
 import React, { Fragment } from "react";
 import Link from "next/link";
+import type { BlogCategory } from "@/types/strapi";
 
 const FALLBACK = [
-  { category: "UX/UI Design", number: "26" },
-  { category: "Nursing Assistant", number: "30" },
-  { category: "Web Designer", number: "71" },
-  { category: "Medical Assistant", number: "56" },
-  { category: "Marketing Coordinator", number: "60" },
+  { category: "UX/UI Design", number: "26", slug: undefined as string | undefined },
+  { category: "Nursing Assistant", number: "30", slug: undefined as string | undefined },
+  { category: "Web Designer", number: "71", slug: undefined as string | undefined },
+  { category: "Medical Assistant", number: "56", slug: undefined as string | undefined },
+  { category: "Marketing Coordinator", number: "60", slug: undefined as string | undefined },
 ];
 
-const CategoryWidgetTwo = ({ categories = [] }) => {
+type CategoryItem = BlogCategory & {
+  count?: number;
+  blogPosts?: unknown[];
+};
+
+type CategoryWidgetTwoProps = {
+  categories?: CategoryItem[];
+};
+
+const CategoryWidgetTwo = ({ categories = [] }: CategoryWidgetTwoProps) => {
   const items = categories.length
     ? categories.map((cat) => ({
         category: cat.name,

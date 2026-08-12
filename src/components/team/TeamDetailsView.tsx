@@ -5,6 +5,7 @@ import { mediaUrl } from "@/lib/axios";
 import SocialThree from "@/components/social/SocialThree";
 import SkillTwo from "@/components/skill/SkillTwo";
 import ToolsList from "@/components/Service/ToolsList";
+import type { ServiceProvider } from "@/types/strapi";
 
 const DEFAULT_BIO = `
 <p class="text-white">Quickly integrate client-centered users through vertical data. Holisticly repurpose interactive expert after distinctive resources. Collaboratively engineer prospective imperatives with transparent technology. Phosfluorescently morph excellent materials. Quickly integrate client-centered users through vertical data. Holisticly repurpose interactive expertise after distinctive resources. Collaboratively engineer prospective imperatives with transparent technology. Phosfluorescently morph excellent materials for multifunctional collaboration and idea-sharing. Continually innovate maintainable e-commerce without future-proof relationships.</p>
@@ -14,7 +15,11 @@ const DEFAULT_BIO = `
 const DEFAULT_SKILLS_DESC =
   "Quickly integrate client-centered users through vertical data. Holisticly repurpose interactive expert after distinctive resources. Collaboratively engineer prospective imperatives with transparent technology. Phosfluorescently morph excellent materials.";
 
-const TeamDetailsView = ({ member }) => {
+type TeamDetailsViewProps = {
+  member: ServiceProvider;
+};
+
+const TeamDetailsView = ({ member }: TeamDetailsViewProps) => {
   const image = mediaUrl(
     member.profileImage?.url,
     "/assets/img/team/team-16f.jpg",

@@ -3,11 +3,16 @@
 import React, { Fragment } from "react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { mediaUrl } from "@/lib/axios";
+import type { StrapiMedia } from "@/types/strapi";
 
-const ProjectMasonryTwo = ({ images = [] }) => {
+type ProjectMasonryTwoProps = {
+  images?: StrapiMedia[];
+};
+
+const ProjectMasonryTwo = ({ images = [] }: ProjectMasonryTwoProps) => {
   const gallery = (images || [])
-    .map((img) => mediaUrl(img?.url))
-    .filter(Boolean);
+    .map((img) => (img?.url ? mediaUrl(img.url) : null))
+    .filter((src): src is string => Boolean(src));
 
   if (!gallery.length) return null;
 

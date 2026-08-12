@@ -14,7 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const [global, page] = await Promise.all([getGlobal(), getProjectsPage()]);
   return buildMetadata({
     title: page?.seo?.metaTitle || page?.heading?.title || "Projects",
-    description: page?.seo?.metaDescription || page?.heading?.description,
+    description:
+      page?.seo?.metaDescription || page?.heading?.description || undefined,
     path: "/projects",
     global,
   });

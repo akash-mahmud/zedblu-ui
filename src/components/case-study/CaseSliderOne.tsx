@@ -4,6 +4,7 @@ import React, { Fragment } from "react";
 import Link from "next/link";
 import Slider from "react-slick";
 import { mediaUrl } from "@/lib/axios";
+import type { Project } from "@/types/strapi";
 
 const settings = {
   dots: false,
@@ -19,7 +20,11 @@ const settings = {
   ],
 };
 
-const CaseSliderOne = ({ projects = [] }) => {
+type CaseSliderOneProps = {
+  projects?: Project[];
+};
+
+const CaseSliderOne = ({ projects = [] }: CaseSliderOneProps) => {
   if (!projects.length) return null;
 
   return (
