@@ -1,15 +1,43 @@
 "use client";
-import React, { Fragment } from 'react';
-import ModalVideo from 'react-modal-video';
-import 'react-modal-video/css/modal-video.min.css';
+import React, { Fragment } from "react";
+import ModalVideo from "react-modal-video";
+import "react-modal-video/css/modal-video.min.css";
+import { youtubeVideoId } from "@/lib/youtube";
 
-const ModalVideos = (props) => {
-    const { isOpen, onClick } = props;
+const ModalVideos = ({ isOpen, onClick, videoUrl, videoId, fileUrl }) => {
+  const youtubeId = videoId || youtubeVideoId(videoUrl);
+
+  if (fileUrl) {
+    if (!isOpen) return null;
     return (
-        <Fragment>
-            <ModalVideo channel='youtube' autoplay isOpen={isOpen} videoId="Faow3SKIzq0" onClose={onClick} />
-        </Fragment>
-    )
-}
+      <Fragment>
+        <div className="modal-video" onClick={onClick}>
+          <div className="modal-video-body">
+            <div
+              className="modal-video-inner"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <video src={fileUrl} controls autoPlay style={{ width: "100%" }} />
+            </div>
+          </div>
+        </div>
+      </Fragment>
+    );
+  }
 
-export default ModalVideos
+  if (!youtubeId) return null;
+
+  return (
+    <Fragment>
+      <ModalVideo
+        channel="youtube"
+        autoplay
+        isOpen={isOpen}
+        videoId={youtubeId}
+        onClose={onClick}
+      />
+    </Fragment>
+  );
+};
+
+export default ModalVideos;

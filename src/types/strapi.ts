@@ -95,6 +95,19 @@ export type CtaBlock = {
   image?: StrapiMedia;
 } | null;
 
+export type VideoClip = {
+  youtubeUrl?: string | null;
+  thumbnail?: StrapiMedia;
+  file?: StrapiMedia;
+};
+
+export type LatestVideos = {
+  eyebrow?: string | null;
+  title?: string | null;
+  description?: string | null;
+  items?: VideoClip[];
+} | null;
+
 export type GlobalContent = {
   siteName?: string;
   siteDescription?: string | null;
@@ -142,10 +155,22 @@ export type HomepageContent = {
   processSteps?: ProcessStep[];
   ctaBlock?: CtaBlock;
   showCta?: boolean;
+  latestVideos?: LatestVideos;
   testimonialsHeading?: SectionHeading;
   showTestimonials?: boolean;
   testimonials?: Review[];
   seo?: SeoFields;
+};
+
+export type PricePlan = {
+  name?: string;
+  description?: string | null;
+  price?: string;
+  period?: string | null;
+  features?: string | null;
+  cycle?: "monthly" | "yearly" | null;
+  ctaText?: string | null;
+  ctaUrl?: string | null;
 };
 
 export type AboutPageContent = {
@@ -153,7 +178,25 @@ export type AboutPageContent = {
   story?: string | null;
   mission?: string | null;
   vision?: string | null;
+  introTitle?: string | null;
+  ctaText?: string | null;
+  ctaUrl?: string | null;
+  image?: StrapiMedia;
+  secondaryImage?: StrapiMedia;
+  features?: FeatureItem[];
+  highlights?: FeatureItem[];
+  counters?: CounterItem[];
+  teamHeading?: SectionHeading;
   teamHighlights?: ServiceProvider[];
+  videoLabel?: string | null;
+  youtubeUrl?: string | null;
+  videoFile?: StrapiMedia;
+  videoThumbnail?: StrapiMedia;
+  pricingHeading?: SectionHeading;
+  pricingPlans?: PricePlan[];
+  newsletterTitle?: string | null;
+  newsletterCtaText?: string | null;
+  newsletterCtaUrl?: string | null;
   certifications?: Array<{
     title?: string;
     issuer?: string | null;

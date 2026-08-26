@@ -89,6 +89,11 @@ export async function getHomepage() {
       processHeading: true,
       processSteps: true,
       ctaBlock: { populate: ["image"] },
+      latestVideos: {
+        populate: {
+          items: { populate: ["thumbnail", "file"] },
+        },
+      },
       testimonialsHeading: true,
       testimonials: { populate: ["company"] },
       seo: { populate: ["shareImage"] },
@@ -99,7 +104,17 @@ export async function getHomepage() {
 export async function getAboutPage() {
   return getSingle<AboutPageContent>("/about-page", {
     populate: {
-      teamHighlights: { populate: ["profileImage"] },
+      image: true,
+      secondaryImage: true,
+      features: { populate: ["icon"] },
+      highlights: { populate: ["icon"] },
+      counters: true,
+      teamHeading: true,
+      teamHighlights: { populate: ["profileImage", "socialLinks"] },
+      videoFile: true,
+      videoThumbnail: true,
+      pricingHeading: true,
+      pricingPlans: true,
       certifications: { populate: ["image"] },
       seo: { populate: ["shareImage"] },
     },

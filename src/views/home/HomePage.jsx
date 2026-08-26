@@ -17,11 +17,25 @@ import BlockStylFive from "@/components/block/BlockStylFive";
 import FeedbackTwo from "@/components/testimonial/FeedbackTwo";
 import FooterTwo from "@/components/footer/FooterTwo";
 import ModalVideos from "@/components/modal-video/ModalVideos";
-import { pickImage } from "@/lib/axios";
+import { pickImage, mediaUrl } from "@/lib/axios";
 
 export default function HomePage({ homepage, global }) {
   const [open, setOpen] = useState(false);
-  const OpenModal = () => setOpen(!open);
+  const [activeVideo, setActiveVideo] = useState(null);
+  const OpenModal = (video) => {
+    if (video) {
+      setActiveVideo(video);
+      setOpen(true);
+      return;
+    }
+    setOpen(false);
+  };
+
+  const latestVideos = homepage?.latestVideos;
+  const videoItems = (latestVideos?.items || []).filter(
+    (item) => item?.youtubeUrl || item?.file?.url,
+  );
+  const showLatestVideos = videoItems.length > 0;
 
   const phone =
     global?.contactInfo?.phone || homepage?.ctaBlock?.phoneLabel || "";
@@ -36,7 +50,18 @@ export default function HomePage({ homepage, global }) {
 
   return (
     <Fragment>
-      <ModalVideos isOpen={open} onClick={OpenModal} />
+      {showLatestVideos ? (
+        <ModalVideos
+          isOpen={open}
+          onClick={() => setOpen(false)}
+          videoUrl={activeVideo?.youtubeUrl}
+          fileUrl={
+            activeVideo?.file?.url
+              ? mediaUrl(activeVideo.file.url)
+              : undefined
+          }
+        />
+      ) : null}
       <div className="main-page-wrapper">
         <ThemeMenuTwo global={global} />
 
@@ -192,18 +217,24 @@ export default function HomePage({ homepage, global }) {
           </div>
         </section>
 
-        <section className="latest-case-video slick-nav">
-          <div className="container-fluid px-lg-0">
-            <div className="row gx-4 gx-xxl-5 align-items-center">
-              <div className="col-md-6 pb-sm-45">
-                <VideoSliderOne openModal={OpenModal} />
-              </div>
-              <div className="col-xxl-4 col-md-6">
-                <BlockStyleFive />
+        {showLatestVideos ? (
+          <section className="latest-case-video slick-nav">
+            <div className="container-fluid px-lg-0">
+              <div className="row gx-4 gx-xxl-5 align-items-center">
+                <div className="col-md-6 pb-sm-45">
+                  <VideoSliderOne videos={videoItems} onSelect={OpenModal} />
+                </div>
+                <div className="col-xxl-4 col-md-6">
+                  <BlockStyleFive
+                    eyebrow={latestVideos?.eyebrow}
+                    title={latestVideos?.title}
+                    description={latestVideos?.description}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        ) : null}
 
         <section className="gradient-bg techy-team pt-210 pt-lg-180 pt-sm-60 pb-100 pb-lg-55">
           {/* eslint-disable-next-line @next/next/no-img-element */}
