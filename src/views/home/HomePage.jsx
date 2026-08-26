@@ -1,396 +1,335 @@
 "use client";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Link from "next/link";
 import ThemeMenuTwo from "@/components/header/ThemeMenuTwo";
 import ThemeBannerTwo from "@/components/theme-banner/ThemeBannerTwo";
-import FooterTwo from "@/components/footer/FooterTwo";
+import BrandTwo from "@/components/brand/BrandTwo";
+import FeatureThree from "@/components/feature/FeatureThree";
+import BlockStyleThree from "@/components/block/BlockStyleThree";
+import CounterTwo from "@/components/counter/CounterTwo";
 import FeatureFour from "@/components/feature/FeatureFour";
-import TeamTwoA from "@/components/team/TeamTwoA";
-import CommonCounter from "@/components/counter/CommonCounter";
 import CaseSliderOne from "@/components/case-study/CaseSliderOne";
-import { mediaUrl } from "@/lib/axios";
-
-function SectionTitle({ heading, center = true }) {
-  if (!heading?.title) return null;
-  return (
-    <div className={`section-title mb-55 ${center ? "text-center" : ""}`}>
-      {heading.eyebrow ? (
-        <h6 className="sub-title mb-20" data-aos="fade-up">
-          {heading.eyebrow}
-        </h6>
-      ) : null}
-      <h3 className="sect-title mb-25" data-aos="fade-up" data-aos-delay={50}>
-        {heading.title}
-      </h3>
-      {heading.description ? (
-        <p data-aos="fade-up" data-aos-delay={100}>
-          {heading.description}
-        </p>
-      ) : null}
-    </div>
-  );
-}
+import VideoSliderOne from "@/components/video/VideoSliderOne";
+import BlockStyleFive from "@/components/block/BlockStyleFive";
+import TeamOne from "@/components/team/TeamOne";
+import BlockStylFive from "@/components/block/BlockStylFive";
+import FeedbackTwo from "@/components/testimonial/FeedbackTwo";
+import FooterTwo from "@/components/footer/FooterTwo";
+import ModalVideos from "@/components/modal-video/ModalVideos";
+import { pickImage } from "@/lib/axios";
 
 export default function HomePage({ homepage, global }) {
+  const [open, setOpen] = useState(false);
+  const OpenModal = () => setOpen(!open);
+
   const phone =
     global?.contactInfo?.phone || homepage?.ctaBlock?.phoneLabel || "";
+  const aboutImage = pickImage(
+    homepage?.aboutPreview?.image,
+    "/assets/img/about/about-2b.jpg",
+  );
+  const processImage = pickImage(
+    homepage?.ctaBlock?.image,
+    "/assets/img/work/process-1b.jpg",
+  );
 
   return (
     <Fragment>
+      <ModalVideos isOpen={open} onClick={OpenModal} />
       <div className="main-page-wrapper">
         <ThemeMenuTwo global={global} />
+
         <ThemeBannerTwo
           hero={homepage?.hero}
           secondaryImage={homepage?.heroSecondaryImage}
         />
 
-        {homepage?.showClients !== false ? (
-          <section className="brand-area brand-bg pt-25 pb-25 mt-1">
-            <div className="container">
-              <div className="row gx-4 gx-xxl-5 align-items-center justify-content-center">
-                {(homepage?.clients || []).map((company) => (
-                  <div
-                    className="col-lg-2 col-md-3 col-4 text-center mb-20"
-                    key={company.slug || company.documentId}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={mediaUrl(company.logo?.url)}
-                      alt={company.name || "Client"}
-                      style={{ maxHeight: 48, objectFit: "contain" }}
-                    />
-                  </div>
-                ))}
-              </div>
+        <section className="brand-area brand-bg pt-25 pb-25 mt-1">
+          <div className="container">
+            <div className="row gx-4 gx-xxl-5">
+              <BrandTwo clients={homepage?.clients} />
             </div>
-          </section>
-        ) : null}
+          </div>
+        </section>
 
-        {homepage?.showFeatures !== false && homepage?.features?.length ? (
-          <section className="techy-feature pt-150 pb-30 pt-lg-120">
-            <div className="container">
-              <SectionTitle heading={homepage.featuresHeading} />
-              <div className="row gx-4">
-                {homepage.features.map((feature, index) => (
-                  <div
-                    className="col-lg-4 col-md-6 mb-40"
-                    key={`${feature.title}-${index}`}
-                    data-aos="fade-up"
-                  >
-                    <div className="card-style-four text-center p-4">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={mediaUrl(feature.icon?.url)}
-                        alt={feature.title || "Feature"}
-                        style={{ height: 48, marginBottom: 16 }}
-                      />
-                      <h4 className="mb-15">{feature.title}</h4>
-                      <p>{feature.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        ) : null}
+        <section className="techy-feature pt-150 pb-30 pt-lg-120">
+          <div className="container">
+            <FeatureThree features={homepage?.features} />
+          </div>
+        </section>
 
-        {homepage?.showAboutPreview !== false && homepage?.aboutPreview ? (
-          <section className="about-techy-two pt-75 pb-105">
-            <div className="container">
-              <div className="row gx-4 align-items-center">
-                <div className="col-lg-6 mb-40" data-aos="fade-up">
+        <section className="about-techy-two pt-75 pb-105 pt-lg-40 pb-lg-20 pt-md-30 pb-md-15">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="about-shape shape-1b"
+            src="/assets/img/shape/star-3b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="about-shape shape-2b"
+            src="/assets/img/shape/star-4b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="about-shape shape-3b d-none d-md-inline-block"
+            src="/assets/img/shape/star-2.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="about-shape shape-4b"
+            src="/assets/img/shape/star-5b.svg"
+            alt=""
+          />
+          <div className="container">
+            <div className="row gx-4 gx-xxl-5 align-items-center">
+              <div
+                className="col-xxl-5 col-xl-4 col-md-6 order-2"
+                data-aos="fade-up"
+                data-aos-delay={100}
+              >
+                <div className="about-img-wrapper-two text-lg-end position-relative mb-45">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="w-100" src={aboutImage} alt="About" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    className="w-100"
-                    src={mediaUrl(homepage.aboutPreview.image?.url)}
-                    alt={homepage.aboutPreview.title || "About"}
+                    className="shape-one"
+                    src="/assets/img/shape/line-round-4a.svg"
+                    alt=""
                   />
                 </div>
-                <div className="col-lg-6 mb-40" data-aos="fade-up">
-                  {homepage.aboutPreview.eyebrow ? (
-                    <h6 className="sub-title mb-20">
-                      {homepage.aboutPreview.eyebrow}
-                    </h6>
-                  ) : null}
-                  <h3 className="sect-title mb-25">
-                    {homepage.aboutPreview.title}
+              </div>
+              <div
+                className="col-xxl-4 col-xl-4 col-md-6 order-1"
+                data-aos="fade-up"
+                data-aos-delay={100}
+              >
+                <BlockStyleThree about={homepage?.aboutPreview} />
+              </div>
+              <div
+                className="col-xxl-3 col-xl-4 order-3"
+                data-aos="fade-left"
+                data-aos-delay={100}
+              >
+                <CounterTwo counters={homepage?.counters} />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="our-services service-bg-two pt-95 pb-50 pt-lg-50 pb-lg-15">
+          <div className="container">
+            <div className="row gx-4 gx-xxl-5 align-items-center justify-content-center">
+              <div className="col-xl-5 col-lg-6 col-md-8">
+                <div className="section-title text-center mb-55">
+                  <h3 className="sect-title mb-25" data-aos="fade-up">
+                    {homepage?.servicesHeading?.title || "Our Services"}
                   </h3>
-                  {homepage.aboutPreview.description ? (
-                    <div
-                      className="mb-30"
-                      dangerouslySetInnerHTML={{
-                        __html: homepage.aboutPreview.description,
-                      }}
-                    />
-                  ) : null}
-                  {homepage.counters?.length ? (
-                    <div className="row mb-30">
-                      {homepage.counters.map((counter, index) => (
-                        <div className="col-4" key={`${counter.label}-${index}`}>
-                          <h3 className="text-theme">
-                            <CommonCounter value={String(counter.value || 0)} />
-                            {counter.suffix || ""}
-                          </h3>
-                          <p>{counter.label}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : null}
-                  {homepage.aboutPreview.ctaUrl ? (
-                    <Link
-                      className="theme_btn"
-                      href={homepage.aboutPreview.ctaUrl}
-                    >
-                      {homepage.aboutPreview.ctaText || "Learn More"}
-                    </Link>
-                  ) : null}
+                  {homepage?.servicesHeading?.description ? (
+                    <p data-aos="fade-up" data-aos-delay={100}>
+                      {homepage.servicesHeading.description}
+                    </p>
+                  ) : (
+                    <p data-aos="fade-up" data-aos-delay={100}>
+                      Dramatically supply transparent backward deliverables
+                      before caward comp internal or &quot;organic&quot; sources.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
-          </section>
-        ) : null}
+            <FeatureFour services={homepage?.homepageServices || []} />
+          </div>
+        </section>
 
-        {homepage?.showServices !== false ? (
-          <section className="our-services service-bg-two pt-95 pb-50">
-            <div className="container">
-              <SectionTitle heading={homepage?.servicesHeading} />
-              <FeatureFour services={homepage?.homepageServices || []} />
-              <div className="text-center mt-20 mb-30">
-                <Link className="theme_btn" href="/services">
-                  All Services
+        <section className="latest-case-work slick-nav blog-slick pt-145 pb-150 pt-lg-60 pb-lg-120">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="case-shape shape-1b d-none d-lg-inline-block"
+            src="/assets/img/shape/star-3b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="case-shape shape-2b d-none d-lg-inline-block"
+            src="/assets/img/shape/star-4b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="case-shape shape-3b d-none d-lg-inline-block"
+            src="/assets/img/shape/star-2.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="case-shape shape-4b d-none d-lg-inline-block"
+            src="/assets/img/shape/star-5b.svg"
+            alt=""
+          />
+          <div className="container">
+            <div className="row gx-4 gx-xxl-5 align-items-center">
+              <div className="col-xl-5 col-lg-6 col-md-8">
+                <div className="section-title mb-55 text-md-start text-center">
+                  <h6 className="sub-title mb-20" data-aos="fade-up">
+                    {homepage?.projectsHeading?.eyebrow || "Latest Works"}
+                  </h6>
+                  <h3
+                    className="sect-title mb-25"
+                    data-aos="fade-up"
+                    data-aos-delay={100}
+                  >
+                    {homepage?.projectsHeading?.title ||
+                      "Check out some great case studies"}
+                  </h3>
+                </div>
+              </div>
+            </div>
+            <CaseSliderOne projects={homepage?.homepageProjects || []} />
+          </div>
+        </section>
+
+        <section className="latest-case-video slick-nav">
+          <div className="container-fluid px-lg-0">
+            <div className="row gx-4 gx-xxl-5 align-items-center">
+              <div className="col-md-6 pb-sm-45">
+                <VideoSliderOne openModal={OpenModal} />
+              </div>
+              <div className="col-xxl-4 col-md-6">
+                <BlockStyleFive />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="gradient-bg techy-team pt-210 pt-lg-180 pt-sm-60 pb-100 pb-lg-55">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="team-shape shape-1b"
+            src="/assets/img/shape/star-3b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="team-shape shape-2b"
+            src="/assets/img/shape/star-4b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="team-shape shape-3b"
+            src="/assets/img/shape/star-2.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="team-shape shape-4b"
+            src="/assets/img/shape/star-5b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="team-shape shape-5b"
+            src="/assets/img/shape/star-5b.svg"
+            alt=""
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="team-shape shape-6b"
+            src="/assets/img/shape/line-round-6b.svg"
+            alt=""
+          />
+          <div className="container">
+            <div className="row gx-4 gx-xxl-5">
+              <div className="col-lg-12">
+                <div className="section-title text-center mb-55">
+                  <h6 className="sub-title mb-20">
+                    {homepage?.teamHeading?.eyebrow || "Our Team"}
+                  </h6>
+                  <h2 className="sect-title">
+                    {homepage?.teamHeading?.title || "Expert Team Member"}
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <TeamOne members={homepage?.homepageTeam || []} />
+            <div className="row gx-4 gx-xxl-5">
+              <div
+                className="col-lg-12 text-center pt-15"
+                data-aos="fade-up"
+                data-aos-delay={200}
+              >
+                <Link className="theme_btn" href="/team">
+                  See All Member
                 </Link>
               </div>
             </div>
-          </section>
-        ) : null}
+          </div>
+        </section>
 
-        {(homepage?.showFeaturedService && homepage?.featuredService) ||
-        (homepage?.showFeaturedProject && homepage?.featuredProject) ? (
-          <section className="pt-80 pb-40">
-            <div className="container">
-              <div className="row gx-4">
-                {homepage?.showFeaturedService && homepage?.featuredService ? (
-                  <div className="col-md-6 mb-40">
-                    <div className="card-style-four p-4">
-                      <h6 className="sub-title mb-10">Featured Service</h6>
-                      <h3 className="mb-15">
-                        {homepage.featuredService.title}
-                      </h3>
-                      <p>{homepage.featuredService.shortDescription}</p>
-                      <Link
-                        className="theme_btn"
-                        href={`/services/${homepage.featuredService.slug}`}
-                      >
-                        View Service
-                      </Link>
-                    </div>
-                  </div>
-                ) : null}
-                {homepage?.showFeaturedProject && homepage?.featuredProject ? (
-                  <div className="col-md-6 mb-40">
-                    <div className="card-style-four p-4">
-                      <h6 className="sub-title mb-10">Featured Project</h6>
-                      <h3 className="mb-15">
-                        {homepage.featuredProject.title}
-                      </h3>
-                      <Link
-                        className="theme_btn"
-                        href={`/projects/${homepage.featuredProject.slug}`}
-                      >
-                        View Project
-                      </Link>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {homepage?.showProjects !== false ? (
-          <section className="latest-case-work slick-nav blog-slick pt-145 pb-150 pt-lg-60 pb-lg-120">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="case-shape shape-1b d-none d-lg-inline-block"
-              src="/assets/img/shape/star-3b.svg"
-              alt=""
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="case-shape shape-2b d-none d-lg-inline-block"
-              src="/assets/img/shape/star-4b.svg"
-              alt=""
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="case-shape shape-3b d-none d-lg-inline-block"
-              src="/assets/img/shape/star-2.svg"
-              alt=""
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="case-shape shape-4b d-none d-lg-inline-block"
-              src="/assets/img/shape/star-5b.svg"
-              alt=""
-            />
-            <div className="container">
-              <div className="row gx-4 gx-xxl-5 align-items-center">
-                <div className="col-xl-5 col-lg-6 col-md-8">
-                  <div className="section-title mb-55 text-md-start text-center">
-                    <h6 className="sub-title mb-20" data-aos="fade-up">
-                      {homepage?.projectsHeading?.eyebrow || "Latest Works"}
-                    </h6>
-                    <h3
-                      className="sect-title mb-25"
-                      data-aos="fade-up"
-                      data-aos-delay={100}
-                    >
-                      {homepage?.projectsHeading?.title ||
-                        "Check out some great case studies"}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-              <CaseSliderOne projects={homepage?.homepageProjects || []} />
-            </div>
-          </section>
-        ) : null}
-
-        {homepage?.showTechnologies !== false &&
-        homepage?.homepageTechnologies?.length ? (
-          <section className="pt-40 pb-80">
-            <div className="container">
-              <SectionTitle heading={homepage.technologiesHeading} />
-              <div className="row justify-content-center">
-                {homepage.homepageTechnologies.map((tech) => (
-                  <div
-                    className="col-lg-2 col-md-3 col-4 text-center mb-30"
-                    key={tech.slug || tech.documentId}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={mediaUrl(tech.icon?.url)}
-                      alt={tech.name || "Tech"}
-                      style={{ maxHeight: 40 }}
-                    />
-                    <p className="mt-10 mb-0">{tech.name}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {homepage?.showTeam !== false ? (
-          <section className="techy-team team-sec-two pt-120 pb-100">
-            <div className="container">
-              <SectionTitle heading={homepage?.teamHeading} />
-              <TeamTwoA members={homepage?.homepageTeam || []} />
-              <div className="row gx-4 gx-xxl-5">
-                <div
-                  className="col-lg-12 text-center pt-15"
-                  data-aos="fade-up"
-                  data-aos-delay={200}
-                >
-                  <Link className="theme_btn" href="/team">
-                    See All Member
-                  </Link>
+        <section className="techy-wrok-process pt-140 pb-30 pt-lg-55">
+          <div className="container">
+            <div className="row gx-4 gx-xxl-5">
+              <div className="col-lg-12">
+                <div className="section-title text-center mb-55">
+                  <h6 className="sub-title mb-20">
+                    {homepage?.processHeading?.eyebrow || "Working Process"}
+                  </h6>
+                  <h2 className="sect-title">
+                    {homepage?.processHeading?.title || "How It Works"}
+                  </h2>
                 </div>
               </div>
             </div>
-          </section>
-        ) : null}
-
-        {homepage?.showProcess !== false && homepage?.processSteps?.length ? (
-          <section className="techy-wrok-process pt-100 pb-40">
-            <div className="container">
-              <SectionTitle heading={homepage.processHeading} />
-              <div className="row gx-4">
-                {homepage.processSteps.map((step, index) => (
-                  <div
-                    className="col-lg-3 col-md-6 mb-40"
-                    key={`${step.title}-${index}`}
-                  >
-                    <div className="card-style-four p-4 h-100">
-                      <h5 className="text-theme mb-15">
-                        {String(step.stepNumber || index + 1).padStart(2, "0")}
-                      </h5>
-                      <h4 className="mb-15">{step.title}</h4>
-                      <p>{step.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {homepage?.showCta !== false && homepage?.ctaBlock ? (
-          <section className="pt-40 pb-80">
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-lg-7 mb-30">
+            <div className="row gx-4 gx-xxl-5 align-items-center">
+              <div className="col-xl-7 col-lg-6">
+                <div className="process-img-wrapper mb-45">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    className="w-100"
-                    src={mediaUrl(homepage.ctaBlock.image?.url)}
-                    alt={homepage.ctaBlock.title || "CTA"}
-                  />
-                </div>
-                <div className="col-lg-5 mb-30">
-                  <h3 className="sect-title-two mb-20">
-                    {homepage.ctaBlock.title}
-                  </h3>
-                  {homepage.ctaBlock.description ? (
-                    <p className="mb-20">{homepage.ctaBlock.description}</p>
-                  ) : null}
-                  {phone ? (
-                    <h4 className="fs-24 text-uppercase text-theme fw-medium mb-30">
-                      {phone}
-                    </h4>
-                  ) : null}
-                  <Link
-                    className="theme_btn"
-                    href={homepage.ctaBlock.ctaUrl || "/contact"}
-                  >
-                    {homepage.ctaBlock.ctaText || "Contact Us"}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {homepage?.showTestimonials !== false ? (
-          <section className="client-feedback feedback-bg pt-70 pb-110">
-            <div className="container">
-              <SectionTitle heading={homepage?.testimonialsHeading} />
-              <div className="row gx-4">
-                {(homepage?.testimonials || []).map((review, index) => (
-                  <div
-                    className="col-lg-4 col-md-6 mb-40"
-                    key={review.documentId || review.authorName || index}
-                  >
-                    <div className="card-style-four p-4 h-100">
-                      <p className="mb-20">{review.content}</p>
-                      <h5 className="mb-5">{review.authorName}</h5>
-                      <span>
-                        {review.companyRole}
-                        {review.company?.name
-                          ? ` · ${review.company.name}`
-                          : ""}
-                      </span>
-                      {review.rating ? (
-                        <div className="mt-10">{"★".repeat(review.rating)}</div>
-                      ) : null}
+                  <img src={processImage} alt="" />
+                  <div className="call-box">
+                    <div className="icon">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/assets/img/icon/icon-27b.svg" alt="" />
                     </div>
+                    <h3 className="sect-title-two">
+                      {homepage?.ctaBlock?.title || "Do you have any question?"}
+                    </h3>
+                    {phone ? (
+                      <h4 className="fs-24 text-uppercase text-theme fw-medium">
+                        {phone}
+                      </h4>
+                    ) : null}
                   </div>
-                ))}
+                </div>
+              </div>
+              <div className="col-xl-5 col-lg-6">
+                <BlockStylFive steps={homepage?.processSteps} />
               </div>
             </div>
-          </section>
-        ) : null}
+          </div>
+        </section>
+
+        <section className="client-feedback feedback-bg pt-70 pb-110 pb-lg-60">
+          <div className="container">
+            <div className="row gx-4 gx-xxl-5">
+              <div className="col-lg-12">
+                <div className="section-title text-center mb-55">
+                  <h6 className="sub-title mb-20">
+                    {homepage?.testimonialsHeading?.eyebrow || "Testimonials"}
+                  </h6>
+                  <h2 className="sect-title">
+                    {homepage?.testimonialsHeading?.title ||
+                      "What Our Client Says"}
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <FeedbackTwo reviews={homepage?.testimonials} />
+          </div>
+        </section>
 
         <FooterTwo global={global} />
       </div>

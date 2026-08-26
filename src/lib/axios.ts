@@ -22,9 +22,18 @@ api.interceptors.response.use(
 
 export function mediaUrl(
   url?: string | null,
-  fallback = "/assets/img/logo/logo-1.svg",
+  fallback = "/assets/img/logo/header-logo-1.png",
 ): string {
   if (!url) return fallback;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   return `${STRAPI_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+export function pickImage(
+  media?: { url?: string; width?: number; height?: number } | null,
+  fallback = "/assets/img/logo/header-logo-1.png",
+): string {
+  if (!media?.url) return fallback;
+  if (media.width === 500 && media.height === 650) return fallback;
+  return mediaUrl(media.url, fallback);
 }

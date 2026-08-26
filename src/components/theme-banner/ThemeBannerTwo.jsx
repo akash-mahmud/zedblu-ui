@@ -3,16 +3,30 @@
 import React, { Fragment } from "react";
 import Link from "next/link";
 import CommonCounter from "../counter/CommonCounter";
-import { mediaUrl } from "@/lib/axios";
+import { pickImage } from "@/lib/axios";
 
 const ThemeBannerTwo = ({ hero, secondaryImage }) => {
-  const headline = hero?.headline || "";
+  const headline = hero?.headline || "Techy Software Development Company";
   const lines = headline.split(/\n| \| /).filter(Boolean);
-  const subHeadline = hero?.subHeadline || "";
+  const displayLines =
+    lines.length > 1
+      ? lines
+      : headline.split(" ").reduce((acc, word) => {
+          if (!acc.length || acc[acc.length - 1].split(" ").length >= 2) {
+            acc.push(word);
+          } else {
+            acc[acc.length - 1] = `${acc[acc.length - 1]} ${word}`;
+          }
+          return acc;
+        }, []);
+  const subHeadline = hero?.subHeadline || "Well Known Development Company";
   const ctaText = hero?.ctaText || "Get Our Quote";
   const ctaUrl = hero?.ctaUrl || "/contact";
-  const bg = mediaUrl(hero?.backgroundImage?.url);
-  const secondary = mediaUrl(secondaryImage?.url || hero?.backgroundImage?.url);
+  const bg = pickImage(hero?.backgroundImage, "/assets/img/hero/hero-1b.jpg");
+  const secondary = pickImage(
+    secondaryImage || hero?.backgroundImage,
+    "/assets/img/hero/hero-2b.jpg",
+  );
 
   return (
     <Fragment>
@@ -39,11 +53,9 @@ const ThemeBannerTwo = ({ hero, secondaryImage }) => {
           <div className="row gx-4 gx-xxl-5 align-items-center">
             <div className="col-xl-6 col-md-7">
               <div className="theme__content__two text-md-start text-center">
-                {subHeadline ? (
-                  <h4 className="hero-sub-title mb-25">{subHeadline}</h4>
-                ) : null}
+                <h4 className="hero-sub-title mb-25">{subHeadline}</h4>
                 <h1 className="main-title-two">
-                  {lines.map((line) => (
+                  {displayLines.map((line) => (
                     <span key={line}>{line}</span>
                   ))}
                 </h1>

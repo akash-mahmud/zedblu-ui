@@ -7,6 +7,7 @@ import ThemeMainMenu from "./ThemeMainMenu";
 import SideBar from "../sidebar/SideBar";
 import MobileMenu from "./MobileMenu";
 import type { GlobalContent } from "@/types/strapi";
+import { pickImage } from "@/lib/axios";
 
 type ThemeMenuTwoProps = {
   global?: GlobalContent | null;
@@ -17,11 +18,7 @@ export default function ThemeMenuTwo({ global = null }: ThemeMenuTwoProps) {
   const [modalIsopen, setOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [menu, setMenu] = useState("");
-  const logoSrc = global?.logo?.url
-    ? global.logo.url.startsWith("http")
-      ? global.logo.url
-      : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${global.logo.url}`
-    : "/assets/img/logo/header-logo-1.png";
+  const logoSrc = pickImage(global?.logo, "/assets/img/logo/header-logo-1.png");
 
   useEffect(() => {
     const stickyMenu = () => {

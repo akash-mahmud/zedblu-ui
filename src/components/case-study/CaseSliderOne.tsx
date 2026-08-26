@@ -3,8 +3,39 @@
 import React, { Fragment } from "react";
 import Link from "next/link";
 import Slider from "react-slick";
-import { mediaUrl } from "@/lib/axios";
+import { pickImage } from "@/lib/axios";
 import type { Project } from "@/types/strapi";
+
+const fallbackCases = [
+  {
+    img: "/assets/img/work/case-1b.jpg",
+    tag: "Web Design",
+    title: "Web Analytics",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    href: "/projects",
+  },
+  {
+    img: "/assets/img/work/case-2b.jpg",
+    tag: "Cyber Secure",
+    title: "Cyber Security Core",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    href: "/projects",
+  },
+  {
+    img: "/assets/img/work/case-3b.jpg",
+    tag: "Design",
+    title: "Design For Future",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    href: "/projects",
+  },
+  {
+    img: "/assets/img/work/case-1b.jpg",
+    tag: "Web Design",
+    title: "Web Analytics",
+    desc: 'Dramatically supply transparent backward deliverables before caward comp internal or "organic" sources.',
+    href: "/projects",
+  },
+];
 
 const settings = {
   dots: false,
@@ -25,7 +56,19 @@ type CaseSliderOneProps = {
 };
 
 const CaseSliderOne = ({ projects = [] }: CaseSliderOneProps) => {
-  if (!projects.length) return null;
+  const items =
+    projects.length > 0
+      ? projects.map((project, i) => ({
+          href: project.slug ? `/projects/${project.slug}` : "/projects",
+          img: pickImage(
+            project.featuredImage,
+            fallbackCases[i % fallbackCases.length].img,
+          ),
+          tag: project.category || "Project",
+          title: project.title,
+          desc: project.shortDescription || fallbackCases[i % fallbackCases.length].desc,
+        }))
+      : fallbackCases;
 
   return (
     <Fragment>
@@ -35,37 +78,28 @@ const CaseSliderOne = ({ projects = [] }: CaseSliderOneProps) => {
         data-aos="fade-up"
         data-aos-delay={200}
       >
-        {projects.map((project, i) => {
-          const href = project.slug ? `/projects/${project.slug}` : "/projects";
-          const image = mediaUrl(project.featuredImage?.url);
-          const desc = project.shortDescription || "";
-          return (
-            <div key={project.slug || project.documentId || i} className="col-lg-4">
-              <div className="case-item-one">
-                <div className="case-thumb">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="w-100" src={image} alt={project.title || "Project"} />
-                </div>
-                <div className="case-content">
-                  {project.category ? <span>{project.category}</span> : null}
-                  <h3>
-                    <Link className="sect-title-two" href={href}>
-                      {project.title}
-                    </Link>
-                  </h3>
-                  {desc ? (
-                    <p>
-                      {desc.length > 140 ? `${desc.slice(0, 137)}...` : desc}
-                    </p>
-                  ) : null}
-                  <Link className="case-btn" href={href}>
-                    <i className="bi bi-arrow-up-right" />
+        {items.map((val, i) => (
+          <div key={`${val.title}-${i}`} className="col-lg-4">
+            <div className="case-item-one">
+              <div className="case-thumb">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="w-100" src={val.img} alt={val.title || "Project"} />
+              </div>
+              <div className="case-content">
+                {val.tag ? <span>{val.tag}</span> : null}
+                <h3>
+                  <Link className="sect-title-two" href={val.href}>
+                    {val.title}
                   </Link>
-                </div>
+                </h3>
+                {val.desc ? <p>{val.desc}</p> : null}
+                <Link className="case-btn" href={val.href}>
+                  <i className="bi bi-arrow-up-right" />
+                </Link>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </Slider>
     </Fragment>
   );

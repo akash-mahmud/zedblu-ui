@@ -82,6 +82,11 @@
             height: 100%;
         }
     }
+    img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
     @media (max-width: 1600px) {
         img {
             width: 100%;
