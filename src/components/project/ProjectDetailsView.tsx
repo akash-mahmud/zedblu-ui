@@ -60,7 +60,9 @@ const ProjectDetailsView = ({
   const body = project.bodyDescription || "";
   const challenge = project.challengeDescription || "";
   const challengeItems = Array.isArray(project.challengeItems)
-    ? project.challengeItems.filter(Boolean)
+    ? project.challengeItems
+        .map((item) => (typeof item === "string" ? item : item?.text))
+        .filter(Boolean)
     : [];
   const goals = project.goalsDescription || "";
   const solutions = project.solutionsDescription || "";

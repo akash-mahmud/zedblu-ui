@@ -248,14 +248,21 @@
             object-fit: contain;
         }
     }
+    h3 {
+        color: $white;
+    }
     .sect-title-two {
         display: inline-block;
         margin-bottom: 20px;
         margin-top: 26px;
+        color: $white;
         &:hover {
             color: $theme-color;
             text-decoration: underline;
         }
+    }
+    p {
+        color: rgba($white, 0.8);
     }
     @media #{$lg} {
         padding: 40px 13px;

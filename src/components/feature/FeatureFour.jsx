@@ -82,19 +82,26 @@ const featuresContent = [
   },
 ];
 
+function asText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 const FeatureFour = ({ services }) => {
+  const cmsItems = (services || []).filter((service) => asText(service?.title));
   const items =
-    services?.length > 0
-      ? services.map((service, index) => {
-          const fallback = FALLBACK_ICONS[index % FALLBACK_ICONS.length];
+    cmsItems.length > 0
+      ? cmsItems.map((service, index) => {
+          const fallback = featuresContent[index % featuresContent.length];
           return {
-            title: service.title,
-            desc: service.shortDescription,
+            title: asText(service.title),
+            desc: asText(service.desc || service.shortDescription) || fallback.desc,
             slug: service.slug,
-            iconUrl: mediaUrl(
-              service.icon?.url,
-              `/assets/img/icon/${fallback}.svg`,
-            ),
+            iconUrl:
+              service.iconUrl ||
+              mediaUrl(
+                service.icon?.url,
+                `/assets/img/icon/${FALLBACK_ICONS[index % FALLBACK_ICONS.length]}.svg`,
+              ),
             dataAos: "fade-up",
             dataAosDown: "fade-down",
             dataDelay: String(index * 50 || ""),

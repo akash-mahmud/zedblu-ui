@@ -21,7 +21,9 @@ const servicesContent = [
     },
 ]
 
-const CopyRightThree = () => {
+const CopyRightThree = ({ global = null }) => {
+  const siteName = global?.siteName || "Zedblu";
+
   return (
     <Fragment>
         <div className="copyright-three">
@@ -39,8 +41,7 @@ const CopyRightThree = () => {
                     </div>
                     <div className="col-xl-4 col-lg-6  text-center pb-30">
                         <p className="text-white mb-20">
-                            <a href="https://themeforest.net/user/hamina-themes/portfolio">Hamina-Themes</a>
-                            © {new Date().getFullYear()}, All Rights Reserved</p>
+                            © {new Date().getFullYear()} {siteName}, All Rights Reserved</p>
                     </div>
                     <div
                         className="col-xl-4 col-lg-6 d-flex justify-content-center justify-content-lg-start justify-content-xl-end pb-30">

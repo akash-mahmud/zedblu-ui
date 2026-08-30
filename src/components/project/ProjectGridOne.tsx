@@ -5,7 +5,43 @@ import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { mediaUrl } from "@/lib/axios";
-import type { Project } from "@/types/strapi";
+import type { Project, ProjectCategory } from "@/types/strapi";
+
+function tagList(value: unknown): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.flatMap((item) => tagList(item));
+  if (typeof value === "string") {
+    return value
+      .split(/[,|/]/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  if (typeof value === "object" && value && "text" in value) {
+    return tagList((value as { text?: unknown }).text);
+  }
+  return [];
+}
+
+function matchesCategory(project: Project, category: ProjectCategory): boolean {
+  if (category.showAllProjects) return true;
+
+  const linked = project.filterCategories || [];
+  if (linked.length) {
+    return linked.some(
+      (item) =>
+        (category.documentId && item.documentId === category.documentId) ||
+        (category.slug && item.slug === category.slug) ||
+        (category.name &&
+          item.name?.trim().toLowerCase() === category.name.trim().toLowerCase()),
+    );
+  }
+
+  const needle = (category.name || category.slug || "").trim().toLowerCase();
+  if (!needle) return false;
+  return tagList(project.filterTags).some(
+    (item) => item.trim().toLowerCase() === needle,
+  );
+}
 
 type ProjectCardProps = {
   project: Project;
@@ -42,40 +78,24 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
 
 type ProjectGridOneProps = {
   projects?: Project[];
-  filterTabs?: string[] | null;
+  categories?: ProjectCategory[];
 };
 
 const ProjectGridOne = ({
   projects = [],
-  filterTabs,
+  categories = [],
 }: ProjectGridOneProps) => {
   const [tabIndex, setTabIndex] = useState(0);
+  const tabs = useMemo(
+    () =>
+      categories.filter((category) => Boolean(category?.name || category?.slug)),
+    [categories],
+  );
 
-  const tabs = useMemo(() => {
-    if (Array.isArray(filterTabs) && filterTabs.length > 0) {
-      return filterTabs.map(String);
-    }
-
-    const fromCms = new Set<string>();
-    projects.forEach((project) => {
-      const tags = Array.isArray(project.filterTags) ? project.filterTags : [];
-      tags.forEach((tag) => {
-        if (tag) fromCms.add(String(tag));
-      });
-    });
-
-    return ["All", ...[...fromCms].sort()];
-  }, [filterTabs, projects]);
-
-  const panels = useMemo(() => {
-    return tabs.map((tab) => {
-      if (tab === "All") return projects;
-      return projects.filter((project) => {
-        const tags = Array.isArray(project.filterTags) ? project.filterTags : [];
-        return tags.includes(tab);
-      });
-    });
-  }, [projects, tabs]);
+  const panels = useMemo(
+    () => tabs.map((tab) => projects.filter((project) => matchesCategory(project, tab))),
+    [projects, tabs],
+  );
 
   if (!projects.length) {
     return (
@@ -85,6 +105,30 @@ const ProjectGridOne = ({
     );
   }
 
+  const grid = (items: Project[], extraClass = "") => (
+    <div className={`${extraClass}row gx-4 gx-xxl-5 feature-slider pe-0`}>
+      {items.length ? (
+        items.map((project, i) => (
+          <ProjectCard
+            key={project.slug || project.documentId || i}
+            project={project}
+            index={i}
+          />
+        ))
+      ) : (
+        <div className="col-12">
+          <p className="text-white text-center">
+            No projects in this category.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+
+  if (!tabs.length) {
+    return grid(projects);
+  }
+
   return (
     <Fragment>
       <Tabs selectedIndex={tabIndex} onSelect={setTabIndex}>
@@ -92,36 +136,16 @@ const ProjectGridOne = ({
           <div className="col-xxl-10 text-center">
             <div className="portfolio-menu mb-40">
               {tabs.map((tab) => (
-                <Tab key={tab} className="gf_btn">
-                  {tab}
+                <Tab key={tab.documentId || tab.slug || tab.name} className="gf_btn">
+                  {tab.name || tab.slug}
                 </Tab>
               ))}
             </div>
           </div>
         </TabList>
         {panels.map((items, panelIndex) => (
-          <TabPanel key={tabs[panelIndex]}>
-            <div
-              className={`${
-                panelIndex === 0 ? "" : "grid "
-              }row gx-4 gx-xxl-5 feature-slider pe-0`}
-            >
-              {items.length ? (
-                items.map((project, i) => (
-                  <ProjectCard
-                    key={project.slug || project.documentId || i}
-                    project={project}
-                    index={i}
-                  />
-                ))
-              ) : (
-                <div className="col-12">
-                  <p className="text-white text-center">
-                    No projects in this category.
-                  </p>
-                </div>
-              )}
-            </div>
+          <TabPanel key={tabs[panelIndex].documentId || tabs[panelIndex].slug || panelIndex}>
+            {grid(items, panelIndex === 0 ? "" : "grid ")}
           </TabPanel>
         ))}
       </Tabs>

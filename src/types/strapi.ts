@@ -17,6 +17,14 @@ export type SocialLink = {
   url?: string;
 };
 
+export type MenuItem = {
+  id?: number;
+  label?: string;
+  url?: string;
+  visible?: boolean;
+  position?: number | null;
+};
+
 export type ContactInfo = {
   email?: string | null;
   phone?: string | null;
@@ -116,7 +124,13 @@ export type GlobalContent = {
   footerText?: string | null;
   mapEmbedUrl?: string | null;
   contactInfo?: ContactInfo;
+  sidebar?: {
+    aboutTitle?: string | null;
+    aboutText?: string | null;
+    contactTitle?: string | null;
+  } | null;
   socialLinks?: SocialLink[];
+  menuItems?: MenuItem[];
   defaultSeo?: SeoFields;
   maintenanceMode?: boolean;
   maintenanceMessage?: string | null;
@@ -206,13 +220,23 @@ export type AboutPageContent = {
   seo?: SeoFields;
 };
 
+export type ProjectCategory = {
+  documentId?: string;
+  id?: number;
+  name?: string;
+  slug?: string;
+  sortOrder?: number | null;
+  showAllProjects?: boolean;
+};
+
 export type Project = {
   documentId?: string;
   id?: number;
   title?: string;
   slug?: string;
   category?: string | null;
-  filterTags?: string[] | null;
+  filterTags?: string[] | string | Array<{ text?: string }> | Record<string, unknown> | null;
+  filterCategories?: ProjectCategory[];
   shortDescription?: string | null;
   description?: string | null;
   bodyDescription?: string | null;
@@ -228,7 +252,7 @@ export type Project = {
   results?: string | null;
   tags?: string | null;
   challengeDescription?: string | null;
-  challengeItems?: string[] | null;
+  challengeItems?: Array<string | { text?: string }> | null;
   goalsDescription?: string | null;
   solutionsDescription?: string | null;
   stats?: { value?: number; suffix?: string | null; label?: string }[];
@@ -260,7 +284,6 @@ export type ProjectsPageContent = {
     title?: string;
     description?: string | null;
   } | null;
-  filterTabs?: string[] | null;
   showLoadMore?: boolean;
   loadMoreText?: string | null;
   loadMoreUrl?: string | null;
@@ -303,7 +326,7 @@ export type Service = {
   skillsDescription?: string | null;
   relyHeading?: string | null;
   relyDescription?: string | null;
-  highlights?: string[] | null;
+  highlights?: Array<string | { text?: string }> | null;
   stats?: { value?: number; suffix?: string | null; label?: string }[];
   priceRange?: {
     label?: string | null;

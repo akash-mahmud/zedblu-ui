@@ -4,20 +4,11 @@ import React from "react";
 import Link from "next/link";
 import MetisMenu from "@metismenu/react";
 import "metismenujs/style";
-
-const links = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Services", href: "/services" },
-  { name: "Projects", href: "/projects" },
-  { name: "Team", href: "/team" },
-  { name: "Blog", href: "/blog" },
-  { name: "Clients", href: "/clients" },
-  { name: "Contact", href: "/contact" },
-];
+import { getVisibleMenuItems } from "@/lib/nav";
 
 const MobileMenu = (props) => {
-  const { onClick, active } = props;
+  const { onClick, active, global = null } = props;
+  const items = getVisibleMenuItems(global);
 
   return (
     <div className={`mobile-menu-wrapper ${active} d-lg-none`}>
@@ -31,10 +22,10 @@ const MobileMenu = (props) => {
         <i className="bi bi-x-lg" />
       </span>
       <MetisMenu>
-        {links.map((item) => (
-          <li key={item.href}>
-            <Link href={item.href} onClick={onClick}>
-              {item.name}
+        {items.map((item) => (
+          <li key={`${item.url}-${item.position}`}>
+            <Link href={item.url || "/"} onClick={onClick}>
+              {item.label}
             </Link>
           </li>
         ))}

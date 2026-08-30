@@ -1,65 +1,76 @@
 "use client";
-import React, {Fragment} from 'react'
-import Link from "next/link"
 
+import React, { Fragment } from "react";
+import Link from "next/link";
+import { pickImage } from "@/lib/axios";
 
+const SideBar = ({ onClick, value, global = null }) => {
+  const logoSrc = pickImage(global?.logo, "/assets/img/logo/header-logo-1.png");
+  const aboutTitle = global?.sidebar?.aboutTitle || "About Us";
+  const aboutText = global?.sidebar?.aboutText || global?.siteDescription || "";
+  const contactTitle = global?.sidebar?.contactTitle || "Contact Info";
+  const address = global?.contactInfo?.address || "";
+  const phone = global?.contactInfo?.phone || "";
+  const email = global?.contactInfo?.email || "";
 
-const SideBar = (props) => {
+  return (
+    <Fragment>
+      <aside className={value ? "slide-bar show" : "slide-bar"}>
+        <div className="close-mobile-menu">
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              onClick?.();
+            }}
+          >
+            <i className="fas fa-times" />
+          </a>
+        </div>
+        <div className="offset-sidebar">
+          <div className="offset-widget offset-logo mb-30">
+            <Link href="/">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={logoSrc} alt={global?.siteName || "logo"} />
+            </Link>
+          </div>
+          {aboutText ? (
+            <div className="offset-widget mb-40">
+              <div className="info-widget">
+                <h4 className="offset-title mb-20">{aboutTitle}</h4>
+                <p className="mb-30">{aboutText}</p>
+              </div>
+            </div>
+          ) : null}
+          {address || phone || email ? (
+            <div className="offset-widget mb-30 pr-10">
+              <div className="info-widget info-widget2">
+                <h4 className="offset-title mb-20">{contactTitle}</h4>
+                {address ? (
+                  <p>
+                    <i className="fal fa-address-book" />
+                    {address}
+                  </p>
+                ) : null}
+                {phone ? (
+                  <p>
+                    <i className="fal fa-phone" />
+                    {phone}
+                  </p>
+                ) : null}
+                {email ? (
+                  <p>
+                    <i className="fal fa-envelope-open" />
+                    {email}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </aside>
+    </Fragment>
+  );
+};
 
-    const {onClick, value} = props;
-    
-    return (
-        <Fragment>
-
-            {/* slide-bar start */}
-            <aside className={value?"slide-bar show":"slide-bar"}>
-                <div className="close-mobile-menu">
-                    <a href="#" onClick={onClick}>
-                        <i className="fas fa-times"/>
-                    </a>
-                </div>
-                {/* offset-sidebar start */}
-                <div className="offset-sidebar">
-                    <div className="offset-widget offset-logo mb-30">
-                        <Link href="/">
-                            <img src="/assets/img/logo/header-logo-1.png" alt="logo"/>
-                        </Link>
-                    </div>
-                    <div className="offset-widget mb-40">
-                        <div className="info-widget">
-                            <h4 className="offset-title mb-20">About Us</h4>
-                            <p className="mb-30">
-                                But I must explain to you how all this mistaken idea of denouncing pleasure and
-                                praising pain was born and will give you a complete account of the system and
-                                expound the actual teachings of the great explore
-                            </p>
-                        </div>
-                    </div>
-                    <div className="offset-widget mb-30 pr-10">
-                        <div className="info-widget info-widget2">
-                            <h4 className="offset-title mb-20">Contact Info</h4>
-                            <p>
-                                <i className="fal fa-address-book"/>
-                                23/A, Miranda City Likaoli Prikano, Dope</p>
-                            <p>
-                                <i className="fal fa-phone"/>
-                                +0989 7876 9865 9
-                            </p>
-                            <p>
-                                <i className="fal fa-envelope-open"/>
-                                info@example.com
-                            </p>
-                        </div>
-                    </div>
-                    <div className="login-btn text-center">
-                        <Link className="theme_btn w-100" href="/login">Login</Link>
-                    </div>
-                </div>
-                {/* offset-sidebar end */}
-            </aside>
-            {/* slide-bar end */}
-        </Fragment>
-    )
-}
-
-export default SideBar
+export default SideBar;

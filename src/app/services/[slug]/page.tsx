@@ -50,7 +50,7 @@ export default async function ServicePage({ params }: Props) {
     [global, service, services] = await Promise.all([
       getGlobal(),
       getServiceBySlug(slug),
-      getServices({ filters: { status: { $eq: "active" } } }),
+      getServices(),
     ]);
   } catch (error) {
     console.error(`[services/${slug}] failed to load:`, error);

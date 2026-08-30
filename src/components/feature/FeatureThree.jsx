@@ -27,23 +27,24 @@ const FeaturesContent = [
   },
 ];
 
+function asText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 const FeatureThree = ({ features }) => {
-  const items =
-    features?.length > 0
-      ? features.slice(0, 3).map((feature, i) => ({
-          title: feature.title || FeaturesContent[i]?.title,
-          desc: feature.description || FeaturesContent[i]?.desc,
-          icon: pickImage(
-            feature.icon,
-            `/assets/img/icon/${FeaturesContent[i % FeaturesContent.length].icon}.svg`,
-          ),
-          dataAos: "fade-up",
-          dataDelay: String(i * 50 || ""),
-        }))
-      : FeaturesContent.map((val) => ({
-          ...val,
-          icon: `/assets/img/icon/${val.icon}.svg`,
-        }));
+  const items = FeaturesContent.map((defaults, i) => {
+    const feature = features?.[i];
+    return {
+      title: asText(feature?.title) || defaults.title,
+      desc: asText(feature?.description) || defaults.desc,
+      icon: pickImage(
+        feature?.icon,
+        `/assets/img/icon/${defaults.icon}.svg`,
+      ),
+      dataAos: "fade-up",
+      dataDelay: String(i * 50 || ""),
+    };
+  });
 
   return (
     <Fragment>

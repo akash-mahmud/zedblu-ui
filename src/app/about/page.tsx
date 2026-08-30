@@ -3,7 +3,7 @@ import { getAboutPage, getGlobal } from "@/services/strapi";
 import { buildMetadata } from "@/lib/seo";
 import AboutPageView from "@/views/about/AboutPage";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [global, about] = await Promise.all([getGlobal(), getAboutPage()]);

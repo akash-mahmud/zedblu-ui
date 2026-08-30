@@ -46,6 +46,8 @@ const ServiceDetailsView = ({ service, services }) => {
   const highlights =
     Array.isArray(service.highlights) && service.highlights.length
       ? service.highlights
+          .map((item) => (typeof item === "string" ? item : item?.text))
+          .filter(Boolean)
       : DEFAULT_HIGHLIGHTS;
 
   const stats =

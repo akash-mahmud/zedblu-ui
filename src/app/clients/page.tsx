@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getCompanies, getGlobal } from "@/services/strapi";
 import { buildMetadata } from "@/lib/seo";
-import { mediaUrl } from "@/lib/axios";
+import { pickImage } from "@/lib/axios";
 import ThemeMenuTwo from "@/components/header/ThemeMenuTwo";
 import PageTitle from "@/components/page-title/PageTitle";
 import FooterTwo from "@/components/footer/FooterTwo";
 import NewsletterTwo from "@/components/call-to-action/NewsletterTwo";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobal();
@@ -16,57 +15,62 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ClientsPage() {
-  const companies = await getCompanies();
+  const [global, companies] = await Promise.all([getGlobal(), getCompanies()]);
 
   return (
     <div className="main-page-wrapper">
-      <ThemeMenuTwo />
+      <ThemeMenuTwo global={global} />
       <PageTitle title="Clients" />
-      <section className="pt-100 pb-80">
+      <section className="techy-project-one pt-145 pb-105 pt-lg-55 pb-lg-15">
         <div className="container">
-          <div className="row gx-4">
-            {companies.map((company) => (
-              <div
-                className="col-lg-4 col-md-6 mb-40"
-                key={company.slug || company.documentId}
-              >
-                <div className="card-style-four p-4 h-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={mediaUrl(
-                      company.logo?.url,
-                      "/assets/img/brand/brand-1.png",
-                    )}
-                    alt={company.name || "Client"}
-                    style={{ maxHeight: 56, marginBottom: 16 }}
-                  />
-                  <h4>{company.name}</h4>
-                  {company.contactPerson ? <p>{company.contactPerson}</p> : null}
-                  {company.website ? (
-                    <a href={company.website} target="_blank" rel="noreferrer">
-                      Visit website
+          <div className="row gx-4 gx-xxl-5">
+            {companies.map((company, index) => {
+              const href = company.website || "/clients";
+              const logo = pickImage(
+                company.logo,
+                `/assets/img/brand/brand-${(index % 4) + 1}.svg`,
+              );
+              return (
+                <div
+                  className="col-lg-4 col-md-6"
+                  key={company.slug || company.documentId || index}
+                >
+                  <div className="feature-item mb-40">
+                    <a className="back-bg" href={href} target={company.website ? "_blank" : undefined} rel="noreferrer">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img className="w-100" src={logo} alt={company.name || "Client"} />
                     </a>
-                  ) : null}
-                  {company.projects?.length ? (
-                    <ul className="mt-20 mb-0">
-                      {company.projects.map((project) => (
-                        <li key={project.slug || project.documentId}>
-                          <Link href={`/projects/${project.slug}`}>
-                            {project.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
+                    <h5>
+                      {company.contactPerson || "Client"}
+                    </h5>
+                    <h3>
+                      <a href={href} target={company.website ? "_blank" : undefined} rel="noreferrer">
+                        {company.name}
+                      </a>
+                    </h3>
+                    {company.projects?.length ? (
+                      <p className="mt-15 mb-0">
+                        {company.projects
+                          .slice(0, 2)
+                          .map((project) => project.title)
+                          .filter(Boolean)
+                          .join(" / ")}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
+              );
+            })}
+            {!companies.length ? (
+              <div className="col-12">
+                <p className="text-white text-center">No clients published in Strapi yet.</p>
               </div>
-            ))}
-            {!companies.length ? <p>No clients in Strapi yet.</p> : null}
+            ) : null}
           </div>
         </div>
       </section>
       <NewsletterTwo />
-      <FooterTwo />
+      <FooterTwo global={global} />
     </div>
   );
 }

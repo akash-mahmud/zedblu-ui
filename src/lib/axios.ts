@@ -29,11 +29,20 @@ export function mediaUrl(
   return `${STRAPI_URL}${url.startsWith("/") ? "" : "/"}${url}`;
 }
 
+function isPlaceholderMedia(
+  media?: { url?: string; width?: number; height?: number } | null,
+): boolean {
+  if (!media?.url) return true;
+  const url = media.url.toLowerCase();
+  return /placeholder|placehold\.co|picsum\.photos|dummyimage|via\.placeholder/.test(
+    url,
+  );
+}
+
 export function pickImage(
   media?: { url?: string; width?: number; height?: number } | null,
   fallback = "/assets/img/logo/header-logo-1.png",
 ): string {
-  if (!media?.url) return fallback;
-  if (media.width === 500 && media.height === 650) return fallback;
-  return mediaUrl(media.url, fallback);
+  if (isPlaceholderMedia(media)) return fallback;
+  return mediaUrl(media?.url, fallback);
 }

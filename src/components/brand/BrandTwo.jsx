@@ -19,22 +19,6 @@ const BrandLogo = [
 ];
 
 const BrandTwo = ({ clients }) => {
-  const settings = {
-    dots: false,
-    arrows: false,
-    infinite: true,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 4 } },
-      { breakpoint: 600, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } },
-    ],
-  };
-
   const items =
     clients?.length > 0
       ? clients.map((company, i) => ({
@@ -50,6 +34,24 @@ const BrandTwo = ({ clients }) => {
           name: "brand",
           href: "#",
         }));
+
+  const slidesToShow = Math.min(Math.max(items.length, 1), 4);
+
+  const settings = {
+    dots: false,
+    arrows: false,
+    infinite: items.length > slidesToShow,
+    autoplay: items.length > slidesToShow,
+    autoplaySpeed: 2000,
+    speed: 500,
+    slidesToShow,
+    slidesToScroll: 1,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: Math.min(slidesToShow, 3) } },
+      { breakpoint: 600, settings: { slidesToShow: Math.min(slidesToShow, 2) } },
+      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+    ],
+  };
 
   return (
     <Fragment>

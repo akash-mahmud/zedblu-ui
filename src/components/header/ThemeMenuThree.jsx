@@ -8,8 +8,9 @@ import ThemeMainMenu from './ThemeMainMenu'
 import SearchModal from '../search-modal/SearchModal';
 import SideBar from '../sidebar/SideBar';
 import MobileMenu from './MobileMenu'
+import { pickImage } from "@/lib/axios";
 
-const ThemeMenuThree = () => {
+const ThemeMenuThree = ({ global = null }) => {
     const [sticky, setSticky] = useState(false);
     const [modalIsopen, setOpen] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false);
@@ -34,6 +35,11 @@ const ThemeMenuThree = () => {
         setMenu()
     }
 
+    const logoSrc = pickImage(global?.logo, "/assets/img/logo/header-logo-1.png");
+    const phone = global?.contactInfo?.phone || "(505) 555-0125";
+    const hours = global?.contactInfo?.officeHours || "10AM - 11:30PM";
+    const location = global?.contactInfo?.address || "USA, New York";
+
     useEffect(() => {
         const stickyMenu = () => {
             if (window.scrollY >= 60) {
@@ -49,14 +55,14 @@ const ThemeMenuThree = () => {
     return (
         <Fragment>
             <SearchModal isOpen={modalIsopen} onClick={closeModal}/>
-            <SideBar onClick={closeSidebar} value={showSidebar} />
+            <SideBar onClick={closeSidebar} value={showSidebar} global={global} />
             <header className="theme-main-menu theme-menu-three pt-25">
                 <div className="top-header pb-25">
                     <div className="container">
                         <div className="row align-items-center">
                             <div className="col-xl-4 col-lg-3 text-start d-none d-lg-inline-block">
                                 <div className="logo-area">
-                                    <Link href="/"><img src="/assets/img/logo/header-logo-1.png" alt="Header-logo"/></Link>
+                                    <Link href="/"><img src={logoSrc} alt={global?.siteName || "Header-logo"}/></Link>
                                 </div>
                             </div>
                             <div className="col-xl-8 col-lg-9">
@@ -69,7 +75,7 @@ const ThemeMenuThree = () => {
                                             </div>
                                             <div className="text-content">
                                                 <span>Time</span>
-                                                <h6 className="text-white">10AM - 11:30PM</h6>
+                                                <h6 className="text-white">{hours}</h6>
                                             </div>
                                         </div>
                                     </li>
@@ -85,7 +91,7 @@ const ThemeMenuThree = () => {
                                                         <a
                                                             className="language-btn dropdown-toggle"
                                                             href="#">
-                                                            USA, New York
+                                                            {location}
                                                             <i className="fal fa-chevron-down"/>
                                                         </a>
                                                         <ul className="dropdown-menu-language" aria-labelledby="dropdownMenuLink">
@@ -117,7 +123,7 @@ const ThemeMenuThree = () => {
                                             </div>
                                             <div className="text-content">
                                                 <span>Phone</span>
-                                                <h6 className="text-white">(505) 555-0125</h6>
+                                                <h6 className="text-white">{phone}</h6>
                                             </div>
                                         </div>
                                     </li>
@@ -131,14 +137,14 @@ const ThemeMenuThree = () => {
                         <div className="row align-items-center">
                             <div className="col-6 d-lg-none d-md-block">
                                 <div className="logo-area">
-                                    <Link href="/"><img src="/assets/img/logo/header-logo-1.png" alt="Header-logo"/></Link>
+                                    <Link href="/"><img src={logoSrc} alt={global?.siteName || "Header-logo"}/></Link>
                                 </div>
                             </div>
                             <div className="col-xxl-8 col-lg-10 d-none d-lg-block">
                                 <nav className="navbar navbar-expand-lg">
                                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                                         {/* ThemeMainMenu  */}
-                                        <ThemeMainMenu />
+                                        <ThemeMainMenu global={global} />
                                         {/* ThemeMainMenu  */}
                                     </div>
                                 </nav>
@@ -172,7 +178,7 @@ const ThemeMenuThree = () => {
                     </div>
                 </div>
                 {/* /.theme-main-menu */}
-                <MobileMenu onClick={hideMobilemenu} active={menu} />
+                <MobileMenu onClick={hideMobilemenu} active={menu} global={global} />
             </header>
             
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getGlobal, getProjects, getProjectsPage } from "@/services/strapi";
+import { getGlobal, getProjectCategories, getProjects, getProjectsPage } from "@/services/strapi";
 import { buildMetadata } from "@/lib/seo";
 import ThemeMenuTwo from "@/components/header/ThemeMenuTwo";
 import PageTitle from "@/components/page-title/PageTitle";
@@ -22,10 +22,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProjectsPage() {
-  const [global, page, projects] = await Promise.all([
+  const [global, page, projects, categories] = await Promise.all([
     getGlobal(),
     getProjectsPage(),
     getProjects(),
+    getProjectCategories(),
   ]);
 
   const pageTitle = page?.pageTitle || "Our Project";
@@ -58,10 +59,7 @@ export default async function ProjectsPage() {
               </div>
             </div>
           </div>
-          <ProjectGridOne
-            projects={projects}
-            filterTabs={page?.filterTabs}
-          />
+          <ProjectGridOne projects={projects} categories={categories} />
           {showLoadMore ? (
             <div className="row">
               <div className="col-lg-12 text-center mt-10 mb-45">

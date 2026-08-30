@@ -32,7 +32,7 @@ export default function ThemeMenuTwo({ global = null }: ThemeMenuTwoProps) {
   return (
     <Fragment>
       <SearchModal isOpen={modalIsopen} onClick={() => setOpen(false)} />
-      <SideBar onClick={() => setShowSidebar(false)} value={showSidebar} />
+      <SideBar onClick={() => setShowSidebar(false)} value={showSidebar} global={global} />
       <header className="theme-main-menu theme-menu-two pt-md-25 pt-40">
         <div className="top-header pb-20">
           <div className="container">
@@ -105,7 +105,7 @@ export default function ThemeMenuTwo({ global = null }: ThemeMenuTwoProps) {
                     className="collapse navbar-collapse"
                     id="navbarSupportedContent"
                   >
-                    <ThemeMainMenu />
+                    <ThemeMainMenu global={global} />
                   </div>
                 </nav>
               </div>
@@ -123,7 +123,7 @@ export default function ThemeMenuTwo({ global = null }: ThemeMenuTwoProps) {
         </div>
         {/* Reserve nav height when sticky so the page does not jump */}
         {sticky ? <div className="sticky-menu-spacer" aria-hidden="true" /> : null}
-        <MobileMenu onClick={() => setMenu("")} active={menu} />
+        <MobileMenu onClick={() => setMenu("")} active={menu} global={global} />
       </header>
     </Fragment>
   );

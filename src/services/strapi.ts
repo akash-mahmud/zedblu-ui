@@ -8,6 +8,7 @@ import type {
   HomepageContent,
   InquiryPayload,
   Project,
+  ProjectCategory,
   ProjectsPageContent,
   Review,
   Service,
@@ -57,7 +58,9 @@ export async function getGlobal() {
       favicon: true,
       logo: true,
       contactInfo: true,
+      sidebar: true,
       socialLinks: true,
+      menuItems: true,
       defaultSeo: { populate: ["shareImage"] },
     },
   });
@@ -131,6 +134,13 @@ export async function getProjectsPage() {
   });
 }
 
+export async function getProjectCategories() {
+  return getList<ProjectCategory>("/project-categories", {
+    sort: ["sortOrder:asc", "name:asc"],
+    pagination: { pageSize: 100 },
+  });
+}
+
 export async function getProjects(params?: Record<string, unknown>) {
   return getList<Project>("/projects", {
     populate: {
@@ -142,6 +152,8 @@ export async function getProjects(params?: Record<string, unknown>) {
       team: { populate: ["profileImage"] },
       stats: true,
       downloadButtons: { populate: ["file"] },
+      filterCategories: true,
+      filterTags: true,
     },
     sort: ["sortOrder:asc", "createdAt:asc"],
     pagination: { pageSize: 100 },
@@ -164,6 +176,9 @@ export async function getProjectBySlug(slug: string) {
       reviews: true,
       stats: true,
       downloadButtons: { populate: ["file"] },
+      filterCategories: true,
+      filterTags: true,
+      challengeItems: true,
     },
   });
   return items[0] ?? null;
@@ -179,6 +194,7 @@ export async function getServices(params?: Record<string, unknown>) {
       priceRange: true,
       specializations: true,
       stats: true,
+      highlights: true,
     },
     pagination: { pageSize: 100 },
     ...params,
@@ -199,6 +215,7 @@ export async function getServiceBySlug(slug: string) {
         priceRange: true,
         specializations: true,
         stats: true,
+        highlights: true,
       },
     });
     return items[0] ?? null;
@@ -215,6 +232,7 @@ export async function getServiceBySlug(slug: string) {
           specializations: true,
           stats: true,
           priceRange: true,
+          highlights: true,
         },
       });
       return items[0] ?? null;
