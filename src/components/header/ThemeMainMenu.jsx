@@ -4,6 +4,9 @@ import React, { Fragment } from "react";
 import Link from "next/link";
 import { getVisibleMenuItems } from "@/lib/nav";
 
+/**
+ * @param {{ global?: import("@/types/strapi").GlobalContent | null }} props
+ */
 const ThemeMainMenu = ({ global = null }) => {
   const items = getVisibleMenuItems(global);
 

@@ -6,6 +6,13 @@ import MetisMenu from "@metismenu/react";
 import "metismenujs/style";
 import { getVisibleMenuItems } from "@/lib/nav";
 
+/**
+ * @param {{
+ *   onClick?: () => void,
+ *   active?: string,
+ *   global?: import("@/types/strapi").GlobalContent | null,
+ * }} props
+ */
 const MobileMenu = (props) => {
   const { onClick, active, global = null } = props;
   const items = getVisibleMenuItems(global);

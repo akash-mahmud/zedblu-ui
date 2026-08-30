@@ -21,6 +21,9 @@ const servicesContent = [
     },
 ]
 
+/**
+ * @param {{ global?: import("@/types/strapi").GlobalContent | null }} props
+ */
 const CopyRightThree = ({ global = null }) => {
   const siteName = global?.siteName || "Zedblu";
 

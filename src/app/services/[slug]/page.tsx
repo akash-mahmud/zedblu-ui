@@ -11,6 +11,7 @@ import PageTitle from "@/components/page-title/PageTitle";
 import NewsletterTwo from "@/components/call-to-action/NewsletterTwo";
 import FooterTwo from "@/components/footer/FooterTwo";
 import ServiceDetailsView from "@/components/Service/ServiceDetailsView";
+import type { GlobalContent, Service } from "@/types/strapi";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -42,9 +43,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ServicePage({ params }: Props) {
   const { slug } = await params;
 
-  let service;
-  let services = [];
-  let global = null;
+  let service: Service | null | undefined;
+  let services: Service[] = [];
+  let global: GlobalContent | null = null;
 
   try {
     [global, service, services] = await Promise.all([

@@ -4,6 +4,9 @@ import Link from "next/link";
 import SubscribeFormTwo from "../form/SubscribeFormTwo";
 import CopyRightThree from "./CopyRightThree";
 
+/**
+ * @param {{ global?: import("@/types/strapi").GlobalContent | null }} props
+ */
 const FooterThree = ({ global = null }) => {
   const contact = global?.contactInfo;
   const contactItems = [

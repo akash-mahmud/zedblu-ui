@@ -4,6 +4,13 @@ import React, { Fragment } from "react";
 import Link from "next/link";
 import { pickImage } from "@/lib/axios";
 
+/**
+ * @param {{
+ *   onClick?: () => void,
+ *   value?: boolean,
+ *   global?: import("@/types/strapi").GlobalContent | null,
+ * }} props
+ */
 const SideBar = ({ onClick, value, global = null }) => {
   const logoSrc = pickImage(global?.logo, "/assets/img/logo/header-logo-1.png");
   const aboutTitle = global?.sidebar?.aboutTitle || "About Us";

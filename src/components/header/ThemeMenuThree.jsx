@@ -10,6 +10,9 @@ import SideBar from '../sidebar/SideBar';
 import MobileMenu from './MobileMenu'
 import { pickImage } from "@/lib/axios";
 
+/**
+ * @param {{ global?: import("@/types/strapi").GlobalContent | null }} props
+ */
 const ThemeMenuThree = ({ global = null }) => {
     const [sticky, setSticky] = useState(false);
     const [modalIsopen, setOpen] = useState(false);
